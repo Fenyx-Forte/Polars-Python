@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "polars-python"
+version = "0.1.0"
+description = ""
+authors = ["Fenyx-Forte <fenyxforte@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+polars = {extras = ["pyarrow"], version = "^0.20.19"}
+duckdb = "^0.10.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.7.0"
+ruff = "^0.3.7"
+bandit = "^1.7.8"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.1.1"
+coverage = "^7.4.4"
+pytest-cov = "^5.0.0"
+faker = "^24.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
