@@ -7,9 +7,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-polars = {extras = ["pyarrow"], version = "^0.20.19"}
+polars = {extras = ["all"], version = "^0.20.19"}
 duckdb = "^0.10.1"
 ipykernel = "^6.29.4"
+fastexcel = "^0.10.4"
 
 
 [tool.poetry.group.dev.dependencies]
