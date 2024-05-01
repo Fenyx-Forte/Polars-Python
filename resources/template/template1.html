@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title> Results </title>
+</head>
+<style>
+    *{
+        background-color: white;
+        color: black;
+    }
+
+    h1{
+        color: blue;
+    }
+</style>
+<body>
+    <h1>Relatorio</h1>
+    <p>Teste Relatorio ENADE</p>
+    <table>
+        <tr>
+            {% for col in cols %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in table %}
+            <tr>
+                {% for col in row %}
+                    <td>{{ col }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
