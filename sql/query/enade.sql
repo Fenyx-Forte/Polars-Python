@@ -7,7 +7,7 @@ select
   , mean(e.nota_padronizada_ce) as nota_padronizada_ce
   , mean(e.conc_enade_cont) as conc_enade_cont
 from
-  "../data/processed/enade.parquet" as e
+  "./data/processed/enade.parquet" as e
 group by
     e.area_avaliacao
   , e.mod_ens

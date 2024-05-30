@@ -26,12 +26,13 @@ def main():
 def creating_pdf():
     logger.info("Starting PDF creation")
 
-    template_html_path = "resources/template/template1.html"
-    query_file_path = ""
+    template_filename = "template1.html"
+    style_filename = "style1.css"
+    query_file_path = "sql/query/enade_2021.sql"
     pdf_file_path = "resources/pdf/output.pdf"
 
     generating_pdf.creating_pdf(
-        template_html_path, query_file_path, pdf_file_path
+        template_filename, style_filename, query_file_path, pdf_file_path
     )
 
     logger.info("PDF creation finished")

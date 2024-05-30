@@ -3,6 +3,8 @@ from pathlib import Path
 
 import pdfkit
 from jinja2 import Template
+from src.utils import read_sql_query
+import duckdb
 
 from logs import my_log
 
@@ -38,15 +40,64 @@ def get_template(filename: str) -> Template:
         Template: jinja2 template object
     """
 
-    content = get_content_file(f"resources/templates/{filename}")
+    content = get_content_file(f"resources/template/{filename}")
     template = Template(content)
     return template
 
 
+def get_styles(style_filename: str) -> str:
+    content = get_content_file(f"resources/style/{style_filename}")
+    return content
+
+
+@my_log.debug_log(logger)
+def render_template(
+    template_filename: str,
+    style_filename: str,
+    cols_name: list[str],
+    table: list[list],
+) -> str:
+    template = get_template(template_filename)
+
+    style = get_styles(style_filename)
+
+    html_body = template.render(styles=style, cols=cols_name, table=table)
+
+    return html_body
+
+
 def creating_pdf(
-    template_html_path: str, query_file_path: str, pdf_file_path: str
+    template_filename: str,
+    style_filename: str,
+    query_file_path: str,
+    pdf_file_path: str,
 ) -> None:
-    # Convert HTML to PDF
-    pdfkit.from_file(template_html_path, pdf_file_path)
+    # 1) query
+    query = read_sql_query.read_query(query_file_path)
+
+    # 2) Gerar resultado query
+    data = duckdb.sql(query).pl()
+
+    # print(data)
+
+    data_dict = data.to_dict(as_series=False)
+
+    # 3) Colunas e linhas
+    cols_name = data_dict.keys()
+    cols_values = list(data_dict.values())
+
+    len_row = len(cols_values[0])
+
+    table = []
+    for i in range(len_row):
+        table.append([])
+        for j in range(len(cols_values)):
+            table[i].append(cols_values[j][i])
+
+    # 4) Gerar HTML
+    html = render_template(template_filename, style_filename, cols_name, table)
+
+    # 5) Gerar PDF
+    pdfkit.from_string(html, pdf_file_path)
 
     print("PDF created successfully.")

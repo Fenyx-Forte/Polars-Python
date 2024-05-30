@@ -1,13 +1,13 @@
 select
     e.area_avaliacao
   , e.mod_ens
-  , mean(e.nota_bruta_fg) as nota_bruta_fg
-  , mean(e.nota_padronizada_fg) as nota_padronizada_fg
-  , mean(e.nota_bruta_ce) as nota_bruta_ce
-  , mean(e.nota_padronizada_ce) as nota_padronizada_ce
-  , mean(e.conc_enade_cont) as conc_enade_cont
+  , round(mean(e.nota_bruta_fg), 2) as nota_bruta_fg
+  , round(mean(e.nota_padronizada_fg), 2) as nota_padronizada_fg
+  , round(mean(e.nota_bruta_ce), 2) as nota_bruta_ce
+  , round(mean(e.nota_padronizada_ce), 2) as nota_padronizada_ce
+  , round(mean(e.conc_enade_cont), 2) as conc_enade_cont
 from
-  "../data/processed/enade.parquet" as e
+  "./data/processed/enade.parquet" as e
 where
   e.ano = 2021
 group by

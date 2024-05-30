@@ -5,14 +5,7 @@
   <title> Results </title>
 </head>
 <style>
-    *{
-        background-color: white;
-        color: black;
-    }
-
-    h1{
-        color: blue;
-    }
+  {{styles}}
 </style>
 <body>
     <h1>Relatorio</h1>
@@ -25,8 +18,8 @@
         </tr>
         {% for row in table %}
             <tr>
-                {% for col in row %}
-                    <td>{{ col }}</td>
+                {% for value in row %}
+                    <td>{{ value }}</td>
                 {% endfor %}
             </tr>
         {% endfor %}
