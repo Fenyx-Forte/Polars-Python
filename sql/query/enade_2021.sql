@@ -1,11 +1,8 @@
 select
-    e.area_avaliacao
-  , e.mod_ens
-  , round(mean(e.nota_bruta_fg), 2) as nota_bruta_fg
-  , round(mean(e.nota_padronizada_fg), 2) as nota_padronizada_fg
-  , round(mean(e.nota_bruta_ce), 2) as nota_bruta_ce
-  , round(mean(e.nota_padronizada_ce), 2) as nota_padronizada_ce
-  , round(mean(e.conc_enade_cont), 2) as conc_enade_cont
+    e.area_avaliacao as "Área de Avaliação"
+  , e.mod_ens as "Modalidade Ensino"
+  , round(mean(e.conc_enade_cont), 2) as "Conceito Enade Contínuo"
+  , round(mean(e.conc_enade_faixa), 2) as "Conceito Enade Faixa"
 from
   "./data/processed/enade.parquet" as e
 where

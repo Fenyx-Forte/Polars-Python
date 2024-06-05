@@ -15,25 +15,25 @@ def get_raw_enade(path: str) -> pl.DataFrame:
 
 @my_log.debug_log(logger)
 def process_enade(raw_enade: pl.DataFrame) -> pl.DataFrame:
-    renamed_columns = {
-        "Ano": ["ano", pl.Int16],
-        "Área de Avaliação": ["area_avaliacao", pl.Categorical],
-        "Nome da IES": ["ies", pl.Categorical],
-        "Organização Acadêmica": ["org_acad", pl.Categorical],
-        "Categoria Administrativa": ["cat_acad", pl.Categorical],
-        "Modalidade de Ensino": ["mod_ens", pl.Categorical],
-        "Município do Curso": ["municipio_curso", pl.Categorical],
-        "Sigla da UF": ["sigla_uf", pl.Categorical],
-        "Nº de Concluintes Inscritos": ["num_conc_insc", pl.Int16],
-        "Nº  de Concluintes Participantes": ["num_conc_part", pl.Int16],
-        "Nota Bruta - FG": ["nota_bruta_fg", pl.Float32],
-        "Nota Padronizada - FG": ["nota_padronizada_fg", pl.Float32],
-        "Nota Bruta - CE": ["nota_bruta_ce", pl.Float32],
-        "Nota Padronizada - CE": ["nota_padronizada_ce", pl.Float32],
-        "Conceito Enade (Contínuo)": ["conc_enade_cont", pl.Float32],
-    }
+    my_transform.verify_columns(raw_enade)
 
-    transformations = my_transform.expr_cast_columns(raw_enade, renamed_columns)
+    coluns_renamed = my_transform.change_column_names()
+
+    transforming_columns = my_transform.transform_columns()
+
+    casting_columns = my_transform.casting_columns()
+
+    standardizing_data = my_transform.standardizing_data()
+
+    shrinking_numerical_columns = my_transform.shrinking_numerical_columns()
+
+    transformations = [
+        coluns_renamed,
+        transforming_columns,
+        casting_columns,
+        standardizing_data,
+        shrinking_numerical_columns,
+    ]
 
     return my_transform.transform(raw_enade, transformations)
 

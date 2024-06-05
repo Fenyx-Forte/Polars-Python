@@ -7,7 +7,7 @@ from src.pdf import generating_pdf
 logger = getLogger("app")
 
 
-def main():
+def main() -> None:
     logger.info("Starting ETL routine")
 
     path_folder_to_find = "data/raw"
@@ -23,7 +23,7 @@ def main():
     logger.info("ETL routine finished")
 
 
-def creating_pdf():
+def creating_pdf() -> None:
     logger.info("Starting PDF creation")
 
     template_filename = "template1.html"

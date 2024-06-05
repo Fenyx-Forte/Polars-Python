@@ -192,6 +192,27 @@ files = [
 python-dateutil = ">=2.4"
 
 [[package]]
+name = "fastexcel"
+version = "0.10.4"
+description = ""
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "fastexcel-0.10.4-cp38-abi3-macosx_10_12_x86_64.whl", hash = "sha256:be881f6828c7a5c3a8dd6e57c64f94c2d9499d2616848436c5040908cc77800f"},
+    {file = "fastexcel-0.10.4-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:03c58045e8aee03612fb76da67a41179d23f80a79615f894258561004748de92"},
+    {file = "fastexcel-0.10.4-cp38-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:43d456fdf4a3d87d579620ec607f9cc4d88d2c4fbea1474c2bb3378ddfb65021"},
+    {file = "fastexcel-0.10.4-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3081cac3be3c26ad118e62f536f8d3c8b8cb5d96da5e13a54435c8115c6fb697"},
+    {file = "fastexcel-0.10.4-cp38-abi3-win_amd64.whl", hash = "sha256:75c32a46e788151ec043ecd1ba814bfc5416485221261aa6f14fd4ececf9e32d"},
+]
+
+[package.dependencies]
+pyarrow = ">=8.0.0"
+
+[package.extras]
+pandas = ["pandas (>=1.4.4)"]
+polars = ["polars (>=0.16.14)"]
+
+[[package]]
 name = "filelock"
 version = "3.14.0"
 description = "A platform independent file lock."
@@ -800,4 +821,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "2344cd1a6b4e738388d97086b4c76aa52a3bc3f18c248c6fd32602ad82212277"
+content-hash = "b922950ccb1dd18f8d338d5bdc89876076e115b7a0131e66bba492b257505c64"

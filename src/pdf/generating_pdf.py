@@ -1,17 +1,17 @@
 import logging
 from pathlib import Path
 
-import pdfkit
-from jinja2 import Template
-from src.utils import read_sql_query
 import duckdb
+import pdfkit
+import polars as pl
+from jinja2 import Template
 
 from logs import my_log
+from src.utils import read_sql_query
 
 logger = logging.getLogger("generating_pdf")
 
 
-@my_log.debug_log(logger)
 def get_content_file(path_file: str) -> str:
     """This function returns the content of a file
 
@@ -76,14 +76,14 @@ def creating_pdf(
     query = read_sql_query.read_query(query_file_path)
 
     # 2) Gerar resultado query
-    data = duckdb.sql(query).pl()
+    data: pl.DataFrame = duckdb.sql(query).pl()
 
     # print(data)
 
     data_dict = data.to_dict(as_series=False)
 
     # 3) Colunas e linhas
-    cols_name = data_dict.keys()
+    cols_name = list(data_dict.keys())
     cols_values = list(data_dict.values())
 
     len_row = len(cols_values[0])
