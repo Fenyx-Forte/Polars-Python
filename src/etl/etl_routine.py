@@ -3,44 +3,39 @@ from logging import getLogger
 import polars as pl
 
 from logs import my_log
-from src.etl import my_extraction, my_load, my_transform
+from src.etl import reading_data, transforming_data, loading_data
 
 logger = getLogger("etl_routine")
+pl.Config.load_from_file("./config/polars.json")
 
 
 @my_log.debug_log(logger)
 def get_raw_enade(path: str) -> pl.DataFrame:
-    return my_extraction.read_excel(path)
+    return reading_data.read_excel(path)
 
 
 @my_log.debug_log(logger)
 def process_enade(raw_enade: pl.DataFrame) -> pl.DataFrame:
-    my_transform.verify_columns(raw_enade)
+    table = transforming_data.enade_table()
 
-    coluns_renamed = my_transform.change_column_names()
+    transforming_data.verify_columns(raw_enade, table)
 
-    transforming_columns = my_transform.transform_columns()
+    table = transforming_data.change_column_names(table)
 
-    casting_columns = my_transform.casting_columns()
+    table = transforming_data.transform_columns(table)
 
-    standardizing_data = my_transform.standardizing_data()
+    table = transforming_data.casting_columns(table)
 
-    shrinking_numerical_columns = my_transform.shrinking_numerical_columns()
+    table = transforming_data.standardizing_data(table)
 
-    transformations = [
-        coluns_renamed,
-        transforming_columns,
-        casting_columns,
-        standardizing_data,
-        shrinking_numerical_columns,
-    ]
+    table = transforming_data.shrinking_numerical_columns(table)
 
-    return my_transform.transform(raw_enade, transformations)
+    return transforming_data.transform(raw_enade, table)
 
 
 @my_log.debug_log(logger)
 def save_enade(path_folder: str, filename: str, df: pl.DataFrame) -> None:
-    my_load.write_parquet(df, f"{path_folder}/{filename}.parquet")
+    loading_data.write_parquet(df, f"{path_folder}/{filename}.parquet")
 
 
 @my_log.debug_log(logger)
@@ -56,7 +51,7 @@ def routine_enade(path: str, path_folder_to_save: str, filename: str) -> None:
 def routine_all_enade(
     path_folder_to_find: str, path_folder_to_save: str
 ) -> None:
-    logger.info("Starting ETL routine")
+    logger.info("Starting ETL routine...\n")
 
     years = [2021, 2019, 2018, 2017]
     for year in years:
@@ -70,5 +65,5 @@ def routine_all_enade(
 
 
 def concatenate_enade(globbing_pattern: str) -> None:
-    all_enade_files = my_extraction.read_multiple_parquet(globbing_pattern)
-    my_load.write_parquet(all_enade_files, "data/processed/enade.parquet")
+    all_enade_files = reading_data.read_multiple_parquet(globbing_pattern)
+    loading_data.write_parquet(all_enade_files, "data/processed/enade.parquet")

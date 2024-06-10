@@ -10,6 +10,7 @@ from logs import my_log
 from src.utils import read_sql_query
 
 logger = logging.getLogger("generating_pdf")
+pl.Config.load_from_file("./config/polars.json")
 
 
 def get_content_file(path_file: str) -> str:
@@ -29,7 +30,6 @@ def get_content_file(path_file: str) -> str:
     return content
 
 
-@my_log.debug_log(logger)
 def get_template(filename: str) -> Template:
     """This function returns a file as a jinja2 template
 
@@ -78,8 +78,6 @@ def creating_pdf(
     # 2) Gerar resultado query
     data: pl.DataFrame = duckdb.sql(query).pl()
 
-    # print(data)
-
     data_dict = data.to_dict(as_series=False)
 
     # 3) Colunas e linhas
@@ -100,4 +98,4 @@ def creating_pdf(
     # 5) Gerar PDF
     pdfkit.from_string(html, pdf_file_path)
 
-    print("PDF created successfully.")
+    logger.info("PDF created successfully.\n")

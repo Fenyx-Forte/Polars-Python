@@ -8,7 +8,7 @@ logger = getLogger("app")
 
 
 def main() -> None:
-    logger.info("Starting ETL routine")
+    logger.info("Starting ETL routine...\n")
 
     path_folder_to_find = "data/raw"
 
@@ -20,16 +20,16 @@ def main() -> None:
 
     etl_routine.concatenate_enade(globbing_pattern)
 
-    logger.info("ETL routine finished")
+    logger.info("ETL routine finished\n")
 
 
 def creating_pdf() -> None:
-    logger.info("Starting PDF creation")
+    logger.info("Starting PDF creation...\n")
 
     template_filename = "template1.html"
     style_filename = "style1.css"
     query_file_path = "sql/query/enade_2021.sql"
-    pdf_file_path = "resources/pdf/output.pdf"
+    pdf_file_path = "reports/enade_2021.pdf"
 
     generating_pdf.creating_pdf(
         template_filename, style_filename, query_file_path, pdf_file_path
