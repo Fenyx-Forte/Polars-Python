@@ -1,7 +1,8 @@
+import polars as pl
 import pytest
 from polars.testing import assert_frame_equal
+
 from src.etl import transforming_data
-import polars as pl
 
 
 @pytest.fixture
@@ -70,6 +71,51 @@ def test_change_column_names(
 ) -> None:
     modified_table = transforming_data.change_column_names(enade_table)
 
-    modified_df = transforming_data.transform(enade_dataframe, modified_table)
+    transformations = []
+
+    columns = modified_table.columns
+    for column in columns.values():
+        transformations.append(column.expression)
+
+    modified_df = enade_dataframe.lazy().select(transformations).collect()
 
     assert modified_df.columns == new_column_names
+
+
+def test_transform_columns(
+    enade_dataframe: pl.DataFrame,
+    enade_table: transforming_data.Table,
+) -> None:
+    modified_table = transforming_data.change_column_names(enade_table)
+
+    modified_table = transforming_data.transform_columns(modified_table)
+
+    transformations = []
+
+    columns = modified_table.columns
+    for column in columns.values():
+        transformations.append(column.expression)
+
+    modified_df = enade_dataframe.lazy().select(transformations).collect()
+
+    expected_df = pl.DataFrame(
+        {
+            "ano": [2019, 2019, 2019],
+            "area_avaliacao": ["a", "b", "c"],
+            "ies": ["a", "b", "c"],
+            "org_acad": ["a", "b", "c"],
+            "cat_acad": ["a", "b", "c"],
+            "mod_ens": ["a", "b", "c"],
+            "municipio_curso": ["a", "b", "c"],
+            "sigla_uf": ["a", "b", "c"],
+            "num_conc_insc": [1, 2, 3],
+            "num_conc_part": [1, 2, 3],
+            "nota_bruta_fg": [1, 2, 3],
+            "nota_padronizada_fg": [1, 2, 3],
+            "nota_bruta_ce": [1, 2, 3],
+            "conc_enade_cont": [1, 2, 3],
+            "conc_enade_faixa": [1, 2, 3],
+        }
+    )
+
+    assert_frame_equal(modified_df, expected_df)

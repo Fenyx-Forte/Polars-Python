@@ -1,16 +1,19 @@
+import base64
 import logging
 from pathlib import Path
 
 import duckdb
-import pdfkit
 import polars as pl
 from jinja2 import Template
+from weasyprint import HTML
 
 from logs import my_log
 from src.utils import read_sql_query
 
 logger = logging.getLogger("generating_pdf")
 pl.Config.load_from_file("./config/polars.json")
+logging.getLogger("fontTools").setLevel(logging.WARNING)
+logging.getLogger("weasyprint").setLevel(logging.WARNING)
 
 
 def get_content_file(path_file: str) -> str:
@@ -40,13 +43,13 @@ def get_template(filename: str) -> Template:
         Template: jinja2 template object
     """
 
-    content = get_content_file(f"resources/template/{filename}")
+    content = get_content_file(f"resources/templates/{filename}")
     template = Template(content)
     return template
 
 
 def get_styles(style_filename: str) -> str:
-    content = get_content_file(f"resources/style/{style_filename}")
+    content = get_content_file(f"resources/styles/{style_filename}")
     return content
 
 
@@ -54,14 +57,15 @@ def get_styles(style_filename: str) -> str:
 def render_template(
     template_filename: str,
     style_filename: str,
-    cols_name: list[str],
-    table: list[list],
+    context: dict,
 ) -> str:
     template = get_template(template_filename)
 
     style = get_styles(style_filename)
 
-    html_body = template.render(styles=style, cols=cols_name, table=table)
+    context["styles"] = style
+
+    html_body = template.render(context)
 
     return html_body
 
@@ -92,10 +96,24 @@ def creating_pdf(
         for j in range(len(cols_values)):
             table[i].append(cols_values[j][i])
 
-    # 4) Gerar HTML
-    html = render_template(template_filename, style_filename, cols_name, table)
+    # 4) Gerar imagem
+    data_uri = base64.b64encode(
+        open("./resources/images/enade.jpg", "rb").read()
+    ).decode("utf-8")
 
-    # 5) Gerar PDF
-    pdfkit.from_string(html, pdf_file_path)
+    embedded_image = f"data:image/png;base64,{data_uri}"
+
+    context = {
+        "embedded_image": embedded_image,
+        "alt_image": "ENADE LOGO",
+        "cols": cols_name,
+        "table": table,
+    }
+
+    # 5) Gerar HTML
+    html = render_template(template_filename, style_filename, context)
+
+    # 6) Gerar PDF
+    HTML(string=html).write_pdf(pdf_file_path)
 
     logger.info("PDF created successfully.\n")

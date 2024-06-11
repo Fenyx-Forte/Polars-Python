@@ -1,0 +1,51 @@
+*{
+  background-color: white;
+  color: black;
+  margin: 0;
+  padding: 0;
+}
+
+@page{
+  size: A4;
+  @top-center{
+    content: "Relatório ENADE";
+    font-size: 10px;
+    text-align: center;
+  };
+
+  @bottom-left{
+    content: "Criado por Fenyx Forte";
+    font-size: 10px;
+    text-align: left;
+  };
+
+  @bottom-center{
+    content: counter(page) " de " counter(pages);
+    font-size: 10px;
+    text-align: center;
+  };
+
+  @bottom-right{
+    content: "11/06/2024";
+    font-size: 10px;
+    text-align: right;
+  };
+}
+
+img{
+  margin-top: 40%;
+  width: 100%;
+  height: auto;
+  display: block;
+  page-break-inside: avoid;
+}
+
+body{
+  font-size: 14px;
+}
+
+
+h1{
+  text-align: center;
+  page-break-before: always;
+}

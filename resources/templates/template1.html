@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title> Results </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Relatório ENADE </title>
+  <style>
+    {{styles}}
+  </style>
 </head>
-<style>
-  {{styles}}
-</style>
 <body>
-    <h1>Relatorio</h1>
-    <p>Teste Relatorio ENADE</p>
+    <img src={{ embedded_image }} alt= {{ alt_image }}>
+
+    <h1> Relatório ENADE </h1>
     <table>
         <tr>
             {% for col in cols %}
