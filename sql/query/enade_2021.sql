@@ -1,6 +1,6 @@
 select
-    e.area_avaliacao as "Área de Avaliação"
-  , e.mod_ens as "Modalidade Ensino"
+    upper(e.area_avaliacao) as "Área de Avaliação"
+  , upper(e.mod_ens) as "Modalidade Ensino"
   , round(mean(e.conc_enade_cont), 2) as "Conceito Enade Contínuo"
   , round(mean(e.conc_enade_faixa), 2) as "Conceito Enade Faixa"
 from

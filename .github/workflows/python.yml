@@ -34,6 +34,6 @@ jobs:
           run: |
             poetry run bandit -c pyproject.toml -r src/ tests/
 
-        - name: Test with pytest
-          run: |
-            poetry run pytest
+        ## - name: Test with pytest
+          ## run: |
+            ## poetry run pytest

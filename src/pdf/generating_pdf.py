@@ -53,6 +53,16 @@ def get_styles(style_filename: str) -> str:
     return content
 
 
+def get_styles_renderized(style_filename: str, context: dict) -> str:
+    content = get_styles(style_filename)
+
+    template = Template(content)
+
+    style_renderized = template.render(context)
+
+    return style_renderized
+
+
 @my_log.debug_log(logger)
 def render_template(
     template_filename: str,
@@ -66,6 +76,23 @@ def render_template(
     context["styles"] = style
 
     html_body = template.render(context)
+
+    return html_body
+
+
+def render_template_special(
+    template_filename: str,
+    context_html: dict,
+    style_filename: str,
+    context_css: dict,
+) -> str:
+    template = get_template(template_filename)
+
+    style = get_styles_renderized(style_filename, context_css)
+
+    context_html["styles"] = style
+
+    html_body = template.render(context_html)
 
     return html_body
 
@@ -103,15 +130,27 @@ def creating_pdf(
 
     embedded_image = f"data:image/png;base64,{data_uri}"
 
-    context = {
+    context_html = {
         "embedded_image": embedded_image,
         "alt_image": "ENADE LOGO",
         "cols": cols_name,
         "table": table,
     }
 
+    uri_image_css = base64.b64encode(
+        open("./resources/images/enade.png", "rb").read()
+    ).decode("utf-8")
+
+    image_embedded_css = f"url(data:image/png;base64,{uri_image_css})"
+
+    context_css = {
+        "image": image_embedded_css,
+    }
+
     # 5) Gerar HTML
-    html = render_template(template_filename, style_filename, context)
+    html = render_template_special(
+        template_filename, context_html, style_filename, context_css
+    )
 
     # 6) Gerar PDF
     HTML(string=html).write_pdf(pdf_file_path)
