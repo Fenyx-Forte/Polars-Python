@@ -2,7 +2,7 @@ from logging import getLogger
 
 from logs import my_log
 from src.etl import etl_routine
-from src.pdf import generating_pdf
+from src.presentation import pdf
 
 logger = getLogger("app")
 
@@ -23,16 +23,23 @@ def main() -> None:
     logger.info("ETL routine finished\n")
 
 
-def creating_pdf() -> None:
+def create_enade_report() -> None:
     logger.info("Starting PDF creation...\n")
 
-    template_filename = "template1.html"
-    style_filename = "style1.css"
+    html_path = "resources/templates/enade.html"
+    css_path = "resources/styles/enade.css"
+    cover_image_path = "resources/images/cover_enade.jpg"
+    logo_image_path = "resources/images/logo_enade.png"
     query_file_path = "sql/query/enade_2021.sql"
-    pdf_file_path = "reports/enade_2021.pdf"
+    path_to_save_pdf = "reports/enade_2021.pdf"
 
-    generating_pdf.creating_pdf(
-        template_filename, style_filename, query_file_path, pdf_file_path
+    pdf.create_enade_report(
+        html_path,
+        css_path,
+        cover_image_path,
+        logo_image_path,
+        query_file_path,
+        path_to_save_pdf,
     )
 
     logger.info("PDF creation finished")

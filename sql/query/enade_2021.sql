@@ -8,7 +8,7 @@ from
 where
   e.ano = 2021
 group by
-    e.area_avaliacao
-  , e.mod_ens
+    "Área de Avaliação"
+  , "Modalidade Ensino"
 order by
-    e.area_avaliacao asc;
+    "Conceito Enade Contínuo" desc;
