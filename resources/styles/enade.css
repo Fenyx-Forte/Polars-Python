@@ -16,7 +16,7 @@
   };
 
   @bottom-right{
-    content: "13/06/2024";
+    content: "17/06/2024";
     font-size: 10px;
     text-align: right;
     display: block;
@@ -54,6 +54,7 @@ body{
 
 .tabela-de-conteudos h1{
   text-align: right;
+  border-top: black solid 1px;
 }
 
 @page tabela-de-conteudos{
@@ -67,6 +68,7 @@ body{
 .relatorio h1{
   text-align: center;
   margin-bottom: 10%;
+  border-bottom: black solid 0.5px;
 }
 
 @page relatorio{
@@ -82,10 +84,10 @@ body{
     display: block;
     height: 60px;
     width: 100px;
-    background-image: url({{ logo_image }});
     background-repeat: no-repeat;
     background-position: center top;
     background-size: contain;
+    background-image: url({{ logo_image }});
   }
 }
 
@@ -95,18 +97,30 @@ table{
   table-layout: auto;
 }
 
+thead{
+  display: table-header-group;
+}
+
 table, th, td {
   border: 1px solid black;
+}
+
+tr{
+  break-inside: avoid;
 }
 
 th, td{
   text-align: center;
   vertical-align: middle;
-  padding-bottom: 10px;
-  padding-top: 10px;
+  padding: 10px;
 }
 
 th{
   background-color: #04AA6D;
   color: white;
+  font-size: 12px;
+}
+
+td{
+  font-size: 10px;
 }

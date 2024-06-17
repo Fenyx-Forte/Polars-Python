@@ -35,21 +35,24 @@
             <br/>
         </p>
         <table>
-            <tr>
-                {% for col in cols %}
-                    <th>{{ col }}</th>
-                {% endfor %}
-            </tr>
-            {% for row in table %}
+            <thead>
                 <tr>
-                    {% for value in row %}
-                        {% if value is float %}
-                            <td>{{ "%.2f" % value }}</td>
-                        {% else %}
-                            <td> {{ value }}</td>
-                        {% endif %}
+                    {% for col in cols %}
+                        <th>{{ col }}</th>
                     {% endfor %}
                 </tr>
+            </thead>
+
+            {% for row in table %}
+            <tr>
+                {% for value in row %}
+                    {% if value is float %}
+                        <td>{{ "%.2f" % value }}</td>
+                    {% else %}
+                        <td> {{ value }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
             {% endfor %}
         </table>
     </div>
