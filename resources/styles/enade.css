@@ -18,20 +18,26 @@
 .footer_left_pages{
   position: running(footer_left_pages);
   content: counter(page) " de " counter(pages);
-  font-size: 10px;
+  font-size: 11px;
   text-align: left;
+  margin-left: 15%;
 }
 
 .footer_right_time{
   position: running(footer_right_time);
   content: "{{ report_time }}";
-  font-size: 10px;
+  font-size: 11px;
   text-align: right;
+  margin-right: 15%;
 }
 
 
 body{
   font-size: 14px;
+}
+
+img{
+  break-inside: avoid;
 }
 
 .capa{
@@ -46,6 +52,7 @@ body{
 }
 
 .capa h1{
+  font-size: 60px;
   text-align: center;
   margin-bottom: 10%;
 }
@@ -60,12 +67,22 @@ body{
 }
 
 .tabela-de-conteudos h1{
+  font-size: 24px;
   text-align: right;
   border-top: black solid 1px;
 }
 
 @page tabela-de-conteudos{
+  margin-top: 7%;
+  margin-bottom: 7%;
 
+  @top-left{
+    content: element(header_left_logo);
+  }
+
+  @top-right{
+    content: element(header_right_country);
+  };
 }
 
 .relatorio{
@@ -79,6 +96,9 @@ body{
 }
 
 @page relatorio{
+  margin-top: 7%;
+  margin-bottom: 7%;
+
   @top-left{
     content: element(header_left_logo);
   }
@@ -94,21 +114,21 @@ body{
   width: 60px;
   background-repeat: no-repeat;
   background-size: contain;
+  background-position: center top;
 }
 
 .header_left_logo{
   position: running(header_left_logo);
-  background-position: left top;
   background-image: url("{{ logo_image }}");
 }
 
 .header_right_country{
   position: running(header_right_country);
-  background-position: right top;
   background-image: url("{{ brasil_image }}");
 }
 
 table{
+  margin-top: 30px;
   width: 100%;
   border-collapse: collapse;
   table-layout: auto;
@@ -135,9 +155,9 @@ th, td{
 th{
   background-color: #04AA6D;
   color: white;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 td{
-  font-size: 10px;
+  font-size: 12px;
 }
