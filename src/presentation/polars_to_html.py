@@ -2,7 +2,7 @@ import logging
 
 import polars as pl
 
-from logs import my_log
+from src.utils import my_log
 
 logger = logging.getLogger("polars_to_html")
 

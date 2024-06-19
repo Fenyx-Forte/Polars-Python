@@ -9,6 +9,23 @@
   </style>
 </head>
 <body>
+    <div class="header_left_logo">
+
+    </div>
+
+    <div class="header_right_country">
+
+    </div>
+
+    <div class="footer_left_pages">
+
+    </div>
+
+    <div class="footer_right_time">
+
+    </div>
+
+
     <div class="capa">
         <h1>
             Relatório ENADE
@@ -43,17 +60,19 @@
                 </tr>
             </thead>
 
-            {% for row in table %}
-            <tr>
-                {% for value in row %}
-                    {% if value is float %}
-                        <td>{{ "%.2f" % value }}</td>
-                    {% else %}
-                        <td> {{ value }}</td>
-                    {% endif %}
+            <tbody>
+                {% for row in table %}
+                <tr>
+                    {% for value in row %}
+                        {% if value is float %}
+                            <td>{{ "%.2f" % value }}</td>
+                        {% else %}
+                            <td> {{ value }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
                 {% endfor %}
-            </tr>
-            {% endfor %}
+            </tbody>
         </table>
     </div>
 </body>

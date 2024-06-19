@@ -1,27 +1,34 @@
-*{
-  background-color: white;
-  color: black;
-  margin: 0;
-  padding: 0;
-}
-
 @page{
-  margin-top: 5%;
   size: A4;
+  margin: 5%;
+
   @bottom-left{
-    content: counter(page) " de " counter(pages);
-    font-size: 10px;
-    text-align: left;
-    display: block;
-  };
+    content: element(footer_left_pages);
+  }
 
   @bottom-right{
-    content: "17/06/2024";
-    font-size: 10px;
-    text-align: right;
-    display: block;
-  };
+    content: element(footer_right_time);
+  }
 }
+
+.footer_left_pages, .footer_right_time{
+  display: block;
+}
+
+.footer_left_pages{
+  position: running(footer_left_pages);
+  content: counter(page) " de " counter(pages);
+  font-size: 10px;
+  text-align: left;
+}
+
+.footer_right_time{
+  position: running(footer_right_time);
+  content: "{{ report_time }}";
+  font-size: 10px;
+  text-align: right;
+}
+
 
 body{
   font-size: 14px;
@@ -72,23 +79,33 @@ body{
 }
 
 @page relatorio{
-  @top-right{
-    content: "Relatório ENADE";
-    font-size: 10px;
-    text-align: left;
-    display: block;
-  };
-
   @top-left{
-    content: "";
-    display: block;
-    height: 60px;
-    width: 100px;
-    background-repeat: no-repeat;
-    background-position: center top;
-    background-size: contain;
-    background-image: url({{ logo_image }});
+    content: element(header_left_logo);
   }
+
+  @top-right{
+    content: element(header_right_country);
+  };
+}
+
+.header_left_logo, .header_right_country{
+  display: block;
+  height: 30px;
+  width: 60px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.header_left_logo{
+  position: running(header_left_logo);
+  background-position: left top;
+  background-image: url("{{ logo_image }}");
+}
+
+.header_right_country{
+  position: running(header_right_country);
+  background-position: right top;
+  background-image: url("{{ brasil_image }}");
 }
 
 table{

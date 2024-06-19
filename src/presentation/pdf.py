@@ -2,9 +2,8 @@ import logging
 
 from weasyprint import HTML
 
-from logs import my_log
 from src.presentation import images, jinja_template, polars_to_html
-from src.utils import duckdb_sql
+from src.utils import duckdb_sql, my_log
 
 logger = logging.getLogger("pdf")
 logging.getLogger("fontTools").setLevel(logging.WARNING)
@@ -20,10 +19,12 @@ def create_pdf(html_string: str, path_to_save_pdf: str) -> None:
 
 
 def create_enade_report(
+    report_time: str,
     html_path: str,
     css_path: str,
     cover_image_path: str,
     logo_image_path: str,
+    brasil_image_path: str,
     query_file_path: str,
     path_to_save_pdf: str,
 ) -> None:
@@ -33,6 +34,7 @@ def create_enade_report(
 
     cover_image = images.embedded_image(cover_image_path)
     logo_image = images.embedded_image(logo_image_path)
+    brasil_image_path = images.embedded_image(brasil_image_path)
 
     html_context = {
         "cover_image": cover_image,
@@ -41,7 +43,9 @@ def create_enade_report(
     }
 
     css_context = {
+        "report_time": report_time,
         "logo_image": logo_image,
+        "brasil_image": brasil_image_path,
     }
 
     html_string = jinja_template.render_final_html_special(

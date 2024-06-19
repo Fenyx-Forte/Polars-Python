@@ -2,8 +2,8 @@ from logging import getLogger
 
 import polars as pl
 
-from logs import my_log
-from src.etl import reading_data, transforming_data, loading_data
+from src.etl import loading_data, reading_data, transforming_data
+from src.utils import my_log
 
 logger = getLogger("etl_routine")
 pl.Config.load_from_file("./config/polars.json")
