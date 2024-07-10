@@ -8,7 +8,6 @@ from src.utils import my_log
 logger = logging.getLogger("duckdb_sql")
 
 
-@my_log.debug_log(logger)
 def read_query_content(query_path: str) -> str:
     query = ""
     with open(query_path, "r") as file:
@@ -17,7 +16,6 @@ def read_query_content(query_path: str) -> str:
     return query
 
 
-@my_log.debug_log(logger)
 def read_query(query_path: str) -> pl.DataFrame:
     query_content = read_query_content(query_path)
 

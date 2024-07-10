@@ -8,7 +8,6 @@ from src.utils import my_log
 logger = logging.getLogger("jinja_template")
 
 
-@my_log.debug_log(logger)
 def get_file_content(file_path: str) -> str:
     """This function returns the content of a file
 
@@ -26,7 +25,6 @@ def get_file_content(file_path: str) -> str:
     return content
 
 
-@my_log.debug_log(logger)
 def get_template(file_path: str) -> Template:
     """This function returns a file as a jinja2 template
 
@@ -42,14 +40,12 @@ def get_template(file_path: str) -> Template:
     return template
 
 
-@my_log.debug_log(logger)
 def get_css(file_path: str) -> str:
     content = get_file_content(file_path)
 
     return content
 
 
-@my_log.debug_log(logger)
 def render_template(
     template_path: str,
     context: dict,
@@ -61,7 +57,6 @@ def render_template(
     return template_renderized
 
 
-@my_log.debug_log(logger)
 def render_final_html_simple(
     html_path: str,
     html_context: dict,
@@ -76,7 +71,6 @@ def render_final_html_simple(
     return html_renderized
 
 
-@my_log.debug_log(logger)
 def render_final_html_special(
     html_path: str,
     html_context: dict,

@@ -2,23 +2,26 @@ from logging import getLogger
 
 import polars as pl
 
-from src.etl import loading_data, reading_data, transforming_data
+from src.etl import (
+    dataframe_utils,
+    loading_data,
+    reading_data,
+    transforming_data,
+)
 from src.utils import my_log
 
 logger = getLogger("etl_routine")
 pl.Config.load_from_file("./config/polars.json")
 
 
-@my_log.debug_log(logger)
 def get_raw_enade(path: str) -> pl.DataFrame:
     return reading_data.read_excel(path)
 
 
-@my_log.debug_log(logger)
 def process_enade(raw_enade: pl.DataFrame) -> pl.DataFrame:
-    table = transforming_data.enade_table()
+    table = dataframe_utils.enade_table()
 
-    transforming_data.verify_columns(raw_enade, table)
+    transforming_data.verify_datatype(raw_enade, table)
 
     table = transforming_data.change_column_names(table)
 
@@ -33,12 +36,10 @@ def process_enade(raw_enade: pl.DataFrame) -> pl.DataFrame:
     return transforming_data.transform(raw_enade, table)
 
 
-@my_log.debug_log(logger)
 def save_enade(path_folder: str, filename: str, df: pl.DataFrame) -> None:
     loading_data.write_parquet(df, f"{path_folder}/{filename}.parquet")
 
 
-@my_log.debug_log(logger)
 def routine_enade(path: str, path_folder_to_save: str, filename: str) -> None:
     raw_enade = get_raw_enade(path)
 
@@ -47,7 +48,6 @@ def routine_enade(path: str, path_folder_to_save: str, filename: str) -> None:
     save_enade(path_folder_to_save, filename, processed_enade)
 
 
-@my_log.debug_log(logger)
 def routine_all_enade(
     path_folder_to_find: str, path_folder_to_save: str
 ) -> None:
