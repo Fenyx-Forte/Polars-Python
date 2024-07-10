@@ -1,5 +1,4 @@
 from logging import getLogger
-from types import coroutine
 
 import polars as pl
 
@@ -18,7 +17,7 @@ def verify_datatype(df: pl.DataFrame, table: dataframe_utils.Table) -> None:
     wrong_columns = []
 
     for column in columns:
-        if schema[column.initial_name] != column.initial_dtype:
+        if not (schema[column.initial_name].is_(column.initial_dtype)):
             wrong_columns.append(
                 [
                     column.initial_name,
@@ -77,7 +76,7 @@ def standardizing_strings(
     columns = table.columns
 
     for column in columns.values():
-        if column.final_dtype == pl.String:
+        if column.final_dtype.is_(pl.String):
             table.set_expr(
                 column.final_name,
                 column.expression.str.to_lowercase()
