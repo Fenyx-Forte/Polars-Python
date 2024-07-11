@@ -8,10 +8,32 @@ logger = getLogger("dataframe_utils")
 pl.Config.load_from_file("./config/polars.json")
 
 
-class DataTypeDifferents(Exception): ...
+class DataTypeDifferents(Exception):
+    """
+    Exceção levantada quando os tipos de dados de uma ou mais colunas são diferentes do esperado.
+    """
+
+    ...
 
 
 class Column:
+    """
+    Representa uma coluna de um DataFrame.
+
+    Args:
+        initial_name (str): O nome inicial da coluna.
+        final_name (str): O nome final da coluna.
+        initial_dtype (pl.DataType): O tipo de dados inicial da coluna.
+        final_dtype (pl.DataType): O tipo de dados final da coluna.
+
+    Attributes:
+        initial_name (str): O nome inicial da coluna.
+        final_name (str): O nome final da coluna.
+        initial_dtype (pl.DataType): O tipo de dados inicial da coluna.
+        final_dtype (pl.DataType): O tipo de dados final da coluna.
+        expression (pl.Expr): A expressão da coluna.
+    """
+
     initial_name: str
     final_name: str
     initial_dtype: pl.DataType
@@ -33,19 +55,67 @@ class Column:
 
 
 class Table:
+    """
+    Representa uma tabela.
+
+    Args:
+        columns (dict[str, Column]): Dicionário que mapeia nomes de colunas para objetos
+            da classe Column.
+
+    Attributes:
+        columns (dict[str, Column]): Dicionário que mapeia nomes de colunas para objetos
+            da classe Column.
+    """
+
     columns: dict[str, Column]
 
-    def __init__(self, columns: dict[str, Column]):
+    def __init__(self, columns: dict[str, Column]) -> None:
+        """
+        Inicializa um objeto da classe Table.
+
+        Args:
+            columns: Dicionário que mapeia nomes de colunas para
+                objetos da classe Column.
+
+        Returns:
+            None.
+        """
         self.columns = columns
 
     def set_expr(self, column_name: str, expression: pl.Expr) -> None:
+        """
+        Define a expressão de uma coluna.
+
+        Args:
+            column_name: Nome da coluna.
+            expression: Expressão da coluna.
+
+        Returns:
+            None.
+        """
         self.columns[column_name].expression = expression
 
     def get_expr(self, column_name: str) -> pl.Expr:
+        """
+        Obtém a expressão de uma coluna.
+
+        Args:
+            column_name (str): Nome da coluna.
+
+        Returns:
+            Expressão da coluna.
+        """
         return self.columns[column_name].expression
 
 
 def enade_table() -> Table:
+    """
+    Cria um objeto Table com as colunas necessárias para a tabela ENADE.
+
+    Returns:
+        Um objeto Table com as colunas para a tabela ENADE.
+    """
+
     columns = {
         "ano": Column("Ano", "ano", pl.Int64(), pl.Int16()),
         "area_avaliacao": Column(

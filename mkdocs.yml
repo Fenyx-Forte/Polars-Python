@@ -1,0 +1,109 @@
+site_name: Documentação Polars-Python
+
+repo_url: https://github.com/Fenyx-Forte/Polars-Python
+repo_name: Polars-Python
+
+nav:
+  - Projeto:
+    - Projeto: index.md
+
+  - Pastas:
+    - Pastas: pastas/index.md
+
+    - Arquivos Soltos:
+      - Arquivos Soltos: pastas/arquivos_soltos/index.md
+
+    - Configurações:
+      - Configurações: pastas/configuracoes/index.md
+      - Polars: pastas/configuracoes/polars.md
+      - Logging: pastas/configuracoes/logging.md
+
+    - Dados:
+      - Dados: pastas/dados/index.md
+      - Originais: pastas/dados/originais.md
+      - Processados: pastas/dados/processados.md
+
+    - Logs:
+      - Logs: pastas/logs/index.md
+      - Debug: pastas/logs/debug.md
+      - Info: pastas/logs/info.md
+      - Error: pastas/logs/error.md
+
+    - Recursos: pastas/recursos.md
+
+    - Relatórios: pastas/relatorios.md
+
+    - SQL: pastas/sql.md
+
+    - SRC: pastas/src.md
+
+    - Testes: pastas/testes.md
+
+  - Python:
+    - Python: python/index.md
+    - ETL:
+      - ETL: python/etl/index.md
+      - Lendo Dados: python/etl/reading_data.md
+      - Transformando Dados: python/etl/transforming_data.md
+      - Salvando Dados: python/etl/loading_data.md
+      - Rotina ETL: python/etl/etl_routine.md
+      - DataFrame Utils: python/etl/dataframe_utils.md
+    - Apresentação:
+      - Apresentação: python/apresentacao/index.md
+      - T1: python/apresentacao/t1.md
+      - T2: python/apresentacao/t2.md
+    - Utils:
+      - Utils: python/utils/index.md
+
+  - Testes:
+    - Testes: testes/index.md
+    - Teste1: testes/t1.md
+    - Teste2: testes/t2.md
+
+  - SQL:
+    - SQL: sql/index.md
+
+  - Recursos:
+    - Recursos: recursos/index.md
+
+  - Relatórios:
+    - Relatórios: relatorios/index.md
+
+plugins:
+  - mkdocstrings
+
+theme:
+  name: material
+  language: pt-BR
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Alternar para modo escuro
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Alternar para modo claro
+
+  icon:
+    repo: fontawesome/brands/github
+
+  features:
+    - navigation.footer
+    - navigation.tabs
+    - navigation.tabs.sticky
+
+extra:
+  social:
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/fenyxforte/
+      name: LinkedIn Fenyx Forte
+
+    - icon: fontawesome/brands/github
+      link: https://github.com/Fenyx-Forte
+      name: GitHub Fenyx Forte
