@@ -1,5 +1,5 @@
-# Text files in root folder
-/*.txt
+# Docs
+site/
 
 # Environments
 .env

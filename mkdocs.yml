@@ -4,14 +4,20 @@ repo_url: https://github.com/Fenyx-Forte/Polars-Python
 repo_name: Polars-Python
 
 nav:
-  - Projeto:
-    - Projeto: index.md
+  - Repositório:
+    - Repositório: index.md
 
   - Pastas:
     - Pastas: pastas/index.md
 
     - Arquivos Soltos:
       - Arquivos Soltos: pastas/arquivos_soltos/index.md
+      - gitignore: pastas/arquivos_soltos/gitignore.md
+      - pre-commit-config: pastas/arquivos_soltos/pre-commit-config.md
+      - mkdocs: pastas/arquivos_soltos/mkdocs.md
+      - readme: pastas/arquivos_soltos/read_me.md
+      - poetry: pastas/arquivos_soltos/poetry.md
+      - pyproject: pastas/arquivos_soltos/pyproject.md
 
     - Configurações:
       - Configurações: pastas/configuracoes/index.md
@@ -50,15 +56,20 @@ nav:
       - DataFrame Utils: python/etl/dataframe_utils.md
     - Apresentação:
       - Apresentação: python/apresentacao/index.md
-      - T1: python/apresentacao/t1.md
-      - T2: python/apresentacao/t2.md
+      - Imagens: python/apresentacao/images.md
+      - Jinja Template: python/apresentacao/jinja_template.md
+      - PDF: python/apresentacao/pdf.md
+      - Polars Para HTML: python/apresentacao/polars_to_html.md
     - Utils:
       - Utils: python/utils/index.md
+      - DuckDB SQL: python/utils/duckdb_sql.md
+      - Log: python/utils/my_log.md
+      - Tempo: python/utils/my_time.md
 
   - Testes:
     - Testes: testes/index.md
-    - Teste1: testes/t1.md
-    - Teste2: testes/t2.md
+    - T1: testes/t1.md
+    - T2: testes/t2.md
 
   - SQL:
     - SQL: sql/index.md
@@ -71,6 +82,7 @@ nav:
 
 plugins:
   - mkdocstrings
+  - search
 
 theme:
   name: material

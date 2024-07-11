@@ -1,7 +1,11 @@
 # Introdução ao Repositório
 
-Lorem
-
-## Header
-
-Lorem
+Repositório criado com a finalidade de eu aprender:
+<br/>
+-> Polars
+<br/>
+-> DuckDB
+<br/>
+-> WeasyPrint
+<br/>
+-> MKDocs
