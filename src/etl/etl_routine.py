@@ -24,7 +24,7 @@ def get_raw_enade(path: str) -> pl.DataFrame:
     Returns:
         O DataFrame contendo os dados brutos do arquivo Excel.
     """
-    return reading_data.read_excel(path)
+    return reading_data.read_enade_excel(path)
 
 
 def process_enade(raw_enade: pl.DataFrame) -> pl.DataFrame:

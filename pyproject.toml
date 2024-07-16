@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 polars = ">=1.1.0"
-duckdb = "^0.10.3"
+duckdb = ">=1.0.0"
 jinja2 = "^3.1.4"
 pdfkit = "^1.0.0"
 fastexcel = "^0.10.4"
@@ -16,6 +16,8 @@ weasyprint = "^62.2"
 mkdocs = "^1.6.0"
 mkdocstrings = {extras = ["python"], version = "^0.25.1"}
 mkdocs-material = "^9.5.28"
+python-dotenv = "^1.0.1"
+ipykernel = "^6.29.5"
 
 
 [tool.poetry.group.dev.dependencies]

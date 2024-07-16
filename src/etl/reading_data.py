@@ -45,7 +45,7 @@ def read_enade_excel(path: str) -> pl.DataFrame:
 
     # Defina as colunas a serem selecionadas do arquivo Excel
     table = dataframe_utils.enade_table()
-    columns = list(table.columns.keys())
+    columns = [column.initial_name for column in table.columns.values()]
 
     # Leia o arquivo Excel, selecionando apenas as colunas especificadas
     df = pl.read_excel(path, engine="calamine", columns=columns)

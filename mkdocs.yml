@@ -74,6 +74,11 @@ nav:
   - SQL:
     - SQL: sql/index.md
 
+  - PostgreSQL:
+    - PostgreSQL: postgre_schema/README.md
+    - Tabelas:
+      - Enade: postgre_schema/public.enade.md
+
   - Recursos:
     - Recursos: recursos/index.md
 

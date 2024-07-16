@@ -1,5 +1,8 @@
+notebooks/
+
 # Docs
 site/
+.tbls.yml
 
 # Environments
 .env
