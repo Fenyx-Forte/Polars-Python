@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-polars = ">=1.1.0"
+polars = {version = ">=1.1.0", extras = ["pyarrow"]}
 duckdb = ">=1.0.0"
 jinja2 = "^3.1.4"
 pdfkit = "^1.0.0"
@@ -18,6 +18,13 @@ mkdocstrings = {extras = ["python"], version = "^0.25.1"}
 mkdocs-material = "^9.5.28"
 python-dotenv = "^1.0.1"
 ipykernel = "^6.29.5"
+connectorx = "^0.3.3"
+sqlalchemy = "^2.0.31"
+pandas = "^2.2.2"
+psycopg2 = "^2.9.9"
+psycopg2-binary = "^2.9.9"
+pyarrow = "^17.0.0"
+pandera = {extras = ["polars"], version = "^0.20.3"}
 
 
 [tool.poetry.group.dev.dependencies]
