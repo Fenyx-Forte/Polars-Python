@@ -1,46 +1,15 @@
 from logging import getLogger
 
+import pandera.polars as pa
 import polars as pl
 
+
+from src.contrato_de_dados import contrato_base, contrato_final
 from src.etl import dataframe_utils
 from src.utils import my_log
 
 logger = getLogger("transforming_data")
 pl.Config.load_from_file("./config/polars.json")
-
-
-def verify_datatype(df: pl.DataFrame, table: dataframe_utils.Table) -> None:
-    """
-    Verifica se os tipos de dados de uma DataFrame são compatíveis com a tabela especificada.
-
-    Args:
-        df: O DataFrame a ser verificado.
-        table: A tabela a ser usada como referência.
-
-    Raises:
-        dataframe_utils.DataTypeDifferents: Se houver colunas com tipos de dados diferentes do esperado.
-
-    Returns:
-        Nenhuma valor é retornado.
-    """
-    columns = table.columns.values()
-
-    schema = df.schema
-
-    wrong_columns = []
-
-    for column in columns:
-        if not (schema[column.initial_name].is_(column.initial_dtype)):
-            wrong_columns.append(
-                [
-                    column.initial_name,
-                    schema[column.initial_name],
-                    column.initial_dtype,
-                ]
-            )
-
-    if len(wrong_columns) >= 1:
-        raise dataframe_utils.DataTypeDifferents(f"{wrong_columns}")
 
 
 def change_column_names(table: dataframe_utils.Table) -> dataframe_utils.Table:
@@ -62,6 +31,25 @@ def change_column_names(table: dataframe_utils.Table) -> dataframe_utils.Table:
         )
 
     return table
+
+
+def verifica_enade_base_lf(lf_enade: pl.LazyFrame) -> None:
+    try:
+        contrato_base.EnadeBase.validate(lf_enade, lazy=True)
+        logger.info("Sem erros de schema na base Enade!")
+
+    except pa.errors.SchemaError as exc:
+        logger.error(exc)
+
+
+def verifica_enade_base_df(df_enade: pl.DataFrame) -> None:
+    try:
+        contrato_base.EnadeBase.validate(df_enade, lazy=True)
+
+        logger.info("Base Enade valida! Nenhum erro detectado\n")
+
+    except pa.errors.SchemaError as exc:
+        logger.error(exc)
 
 
 def transform_column_conceito_enade_faixa(
@@ -191,9 +179,56 @@ def shrinking_numerical_columns(
     return table
 
 
-def transform(
+def enade_filters() -> list[pl.Expr]:
+    filters = [
+        pl.col("ano").is_between(2017, 2021),
+        pl.col("num_conc_insc") >= 1,
+        pl.col("num_conc_part") >= 1,
+        pl.col("nota_bruta_fg").is_between(0, 100),
+        pl.col("nota_padronizada_fg").is_between(0, 5),
+        pl.col("nota_bruta_ce").is_between(0, 100),
+        pl.col("nota_padronizada_ce").is_between(0, 5),
+        pl.col("conc_enade_cont").is_between(0, 5),
+        pl.col("conc_enade_faixa").is_between(1, 5),
+    ]
+
+    return filters
+
+
+def verifica_enade_final_lf(lf_enade: pl.LazyFrame) -> None:
+    try:
+        contrato_final.EnadeFinal.validate(lf_enade, lazy=True)
+        logger.info("Sem erros de schema no Enade final!")
+
+    except pa.errors.SchemaError as exc:
+        logger.error(exc)
+
+
+def verifica_enade_final_df(df_enade: pl.DataFrame) -> None:
+    try:
+        contrato_final.EnadeFinal.validate(df_enade, lazy=True)
+
+        logger.info("Enade Final valido! Nenhum erro detectado!\n")
+
+    except pa.errors.SchemaError as exc:
+        logger.error(exc)
+
+
+def apply_transformations(
     df: pl.DataFrame,
     table: dataframe_utils.Table,
+) -> pl.LazyFrame:
+    transformations = []
+
+    columns = table.columns
+    for column in columns.values():
+        transformations.append(column.expression)
+
+    return df.lazy().select(transformations)
+
+
+def transform(
+    df: pl.DataFrame, table: dataframe_utils.Table, filters: list[pl.Expr]
 ) -> pl.DataFrame:
     """
     Aplica transformações a uma DataFrame com base em uma tabela especificada.
@@ -209,16 +244,14 @@ def transform(
         polars.ComputeError: Se ocorrer um erro de computação durante a transformação.
         Exception: Se ocorrer um erro inesperado durante a transformação.
     """
-    transformations = []
-
-    columns = table.columns
-    for column in columns.values():
-        transformations.append(column.expression)
-
     logger.info("Starting transformation...")
     try:
         final_df = (
-            df.lazy().select(transformations).drop_nulls().unique().collect()
+            apply_transformations(df, table)
+            .filter(*filters)
+            .drop_nulls()
+            .unique()
+            .collect()
         )
 
         logger.info("Transformation done!")

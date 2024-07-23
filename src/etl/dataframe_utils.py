@@ -159,6 +159,12 @@ def enade_table() -> Table:
         "nota_bruta_ce": Column(
             "Nota Bruta - CE", "nota_bruta_ce", pl.Float64(), pl.Float32()
         ),
+        "nota_padronizada_ce": Column(
+            "Nota Padronizada - CE",
+            "nota_padronizada_ce",
+            pl.Float64(),
+            pl.Float32(),
+        ),
         "conc_enade_cont": Column(
             "Conceito Enade (Contínuo)",
             "conc_enade_cont",

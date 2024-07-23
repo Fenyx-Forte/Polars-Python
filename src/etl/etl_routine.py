@@ -39,9 +39,13 @@ def process_enade(raw_enade: pl.DataFrame) -> pl.DataFrame:
     """
     table = dataframe_utils.enade_table()
 
-    transforming_data.verify_datatype(raw_enade, table)
-
     table = transforming_data.change_column_names(table)
+
+    lf_enade_base = transforming_data.apply_transformations(raw_enade, table)
+
+    transforming_data.verifica_enade_base_lf(lf_enade_base)
+
+    transforming_data.verifica_enade_base_df(lf_enade_base.collect())
 
     table = transforming_data.transform_columns(table)
 
@@ -51,7 +55,15 @@ def process_enade(raw_enade: pl.DataFrame) -> pl.DataFrame:
 
     table = transforming_data.shrinking_numerical_columns(table)
 
-    return transforming_data.transform(raw_enade, table)
+    filters = transforming_data.enade_filters()
+
+    df_enade_final = transforming_data.transform(raw_enade, table, filters)
+
+    transforming_data.verifica_enade_final_lf(df_enade_final.lazy())
+
+    transforming_data.verifica_enade_final_df(df_enade_final)
+
+    return df_enade_final
 
 
 def save_enade(path_folder: str, filename: str, df: pl.DataFrame) -> None:
