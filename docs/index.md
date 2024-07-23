@@ -1,11 +1,34 @@
+
 # Introdução ao Repositório
 
-Repositório criado com a finalidade de eu aprender:
+Repositório criado com a finalidade de eu <mark>aprender</mark>
+
+Star: ⭐
+
 <br/>
--> Polars
+
+### -> Polars
+
 <br/>
--> DuckDB
 <br/>
--> WeasyPrint
+
+---
+
+### -> DuckDB
+
 <br/>
--> MKDocs
+<br/>
+
+---
+
+### -> WeasyPrint
+
+<br/>
+<br/>
+
+---
+
+### -> MKDocs
+
+<br/>
+<br/>
