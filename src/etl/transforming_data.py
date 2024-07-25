@@ -3,9 +3,8 @@ from logging import getLogger
 import pandera.polars as pa
 import polars as pl
 
-
-from src.contrato_de_dados import contrato_base, contrato_final
-from src.etl import dataframe_utils
+from src.contrato_de_dados import contrato_entrada, contrato_saida
+from src.etl import dataframe_utils, filtros
 from src.utils import my_log
 
 logger = getLogger("transforming_data")
@@ -31,25 +30,6 @@ def change_column_names(table: dataframe_utils.Table) -> dataframe_utils.Table:
         )
 
     return table
-
-
-def verifica_enade_base_lf(lf_enade: pl.LazyFrame) -> None:
-    try:
-        contrato_base.EnadeBase.validate(lf_enade, lazy=True)
-        logger.info("Sem erros de schema na base Enade!")
-
-    except pa.errors.SchemaError as exc:
-        logger.error(exc)
-
-
-def verifica_enade_base_df(df_enade: pl.DataFrame) -> None:
-    try:
-        contrato_base.EnadeBase.validate(df_enade, lazy=True)
-
-        logger.info("Base Enade valida! Nenhum erro detectado\n")
-
-    except pa.errors.SchemaError as exc:
-        logger.error(exc)
 
 
 def transform_column_conceito_enade_faixa(
@@ -179,87 +159,20 @@ def shrinking_numerical_columns(
     return table
 
 
-def filtro_num_inteiro_positivo(nome_coluna: str) -> pl.Expr:
-    return pl.col(nome_coluna) >= 1
-
-
-def filtro_num_entre_0_e_100(nome_coluna: str) -> pl.Expr:
-    return pl.col(nome_coluna).is_between(0, 100)
-
-
-def filtro_num_entre_0_e_5(nome_coluna: str) -> pl.Expr:
-    return pl.col(nome_coluna).is_between(0, 5)
-
-
-def filtro_enade_ano() -> pl.Expr:
-    return pl.col("ano").is_in([2017, 2018, 2019, 2021])
-
-
-def filtro_enade_num_conc_insc() -> pl.Expr:
-    return filtro_num_inteiro_positivo("num_conc_insc")
-
-
-def filtro_enade_num_conc_part() -> pl.Expr:
-    return filtro_num_inteiro_positivo("num_conc_part")
-
-
-def filtro_enade_nota_bruta_fg() -> pl.Expr:
-    return filtro_num_entre_0_e_100("nota_bruta_fg")
-
-
-def filtro_enade_nota_padronizada_fg() -> pl.Expr:
-    return filtro_num_entre_0_e_5("nota_padronizada_fg")
-
-
-def filtro_enade_nota_bruta_ce() -> pl.Expr:
-    return filtro_num_entre_0_e_100("nota_bruta_ce")
-
-
-def filtro_enade_nota_padronizada_ce() -> pl.Expr:
-    return filtro_num_entre_0_e_5("nota_padronizada_ce")
-
-
-def filtro_enade_conc_enade_cont() -> pl.Expr:
-    return filtro_num_entre_0_e_5("conc_enade_cont")
-
-
-def filtro_enade_conc_enade_faixa() -> pl.Expr:
-    return pl.col("conc_enade_faixa").is_between(1, 5)
-
-
 def enade_filters() -> list[pl.Expr]:
     filters = [
-        filtro_enade_ano(),
-        filtro_enade_num_conc_insc(),
-        filtro_enade_num_conc_part(),
-        filtro_enade_nota_bruta_fg(),
-        filtro_enade_nota_padronizada_fg(),
-        filtro_enade_nota_bruta_ce(),
-        filtro_enade_nota_padronizada_ce(),
-        filtro_enade_conc_enade_cont(),
-        filtro_enade_conc_enade_faixa(),
+        filtros.filtro_enade_ano(),
+        filtros.filtro_enade_num_conc_insc(),
+        filtros.filtro_enade_num_conc_part(),
+        filtros.filtro_enade_nota_bruta_fg(),
+        filtros.filtro_enade_nota_padronizada_fg(),
+        filtros.filtro_enade_nota_bruta_ce(),
+        filtros.filtro_enade_nota_padronizada_ce(),
+        filtros.filtro_enade_conc_enade_cont(),
+        filtros.filtro_enade_conc_enade_faixa(),
     ]
 
     return filters
-
-
-def verifica_enade_final_lf(lf_enade: pl.LazyFrame) -> None:
-    try:
-        contrato_final.EnadeFinal.validate(lf_enade, lazy=True)
-        logger.info("Sem erros de schema no Enade final!")
-
-    except pa.errors.SchemaError as exc:
-        logger.error(exc)
-
-
-def verifica_enade_final_df(df_enade: pl.DataFrame) -> None:
-    try:
-        contrato_final.EnadeFinal.validate(df_enade, lazy=True)
-
-        logger.info("Enade Final valido! Nenhum erro detectado!\n")
-
-    except pa.errors.SchemaError as exc:
-        logger.error(exc)
 
 
 def apply_transformations(

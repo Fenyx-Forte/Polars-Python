@@ -2,7 +2,7 @@ import pandera.polars as pa
 import polars as pl
 import pytest
 
-from src.contrato_de_dados import contrato_base
+from src.contrato_de_dados import contrato_entrada
 
 
 def test_contrato_correto():
@@ -27,7 +27,7 @@ def test_contrato_correto():
         }
     )
 
-    contrato_base.EnadeBase.validate(df_teste)
+    contrato_entrada.EnadeEntrada.validate(df_teste)
 
 
 def test_ano_fora_do_intervalo():
@@ -53,7 +53,7 @@ def test_ano_fora_do_intervalo():
     )
 
     with pytest.raises(pa.errors.SchemaError):
-        contrato_base.EnadeBase.validate(df_teste)
+        contrato_entrada.EnadeEntrada.validate(df_teste)
 
 
 def test_num_conc_insc_abaixo_de_um():
@@ -79,7 +79,7 @@ def test_num_conc_insc_abaixo_de_um():
     )
 
     with pytest.raises(pa.errors.SchemaError):
-        contrato_base.EnadeBase.validate(df_teste)
+        contrato_entrada.EnadeEntrada.validate(df_teste)
 
 
 def test_num_conc_part_negativo():
@@ -105,7 +105,7 @@ def test_num_conc_part_negativo():
     )
 
     with pytest.raises(pa.errors.SchemaError):
-        contrato_base.EnadeBase.validate(df_teste)
+        contrato_entrada.EnadeEntrada.validate(df_teste)
 
 
 def test_nota_bruta_fg_fora_do_intervalo():
@@ -131,7 +131,7 @@ def test_nota_bruta_fg_fora_do_intervalo():
     )
 
     with pytest.raises(pa.errors.SchemaError):
-        contrato_base.EnadeBase.validate(df_teste)
+        contrato_entrada.EnadeEntrada.validate(df_teste)
 
 
 def test_nota_padronizada_fg_fora_do_intervalo():
@@ -157,7 +157,7 @@ def test_nota_padronizada_fg_fora_do_intervalo():
     )
 
     with pytest.raises(pa.errors.SchemaError):
-        contrato_base.EnadeBase.validate(df_teste)
+        contrato_entrada.EnadeEntrada.validate(df_teste)
 
 
 def test_nota_bruta_ce_fora_do_intervalo():
@@ -183,7 +183,7 @@ def test_nota_bruta_ce_fora_do_intervalo():
     )
 
     with pytest.raises(pa.errors.SchemaError):
-        contrato_base.EnadeBase.validate(df_teste)
+        contrato_entrada.EnadeEntrada.validate(df_teste)
 
 
 def test_nota_padronizada_ce_fora_do_intervalo():
@@ -209,7 +209,7 @@ def test_nota_padronizada_ce_fora_do_intervalo():
     )
 
     with pytest.raises(pa.errors.SchemaError):
-        contrato_base.EnadeBase.validate(df_teste)
+        contrato_entrada.EnadeEntrada.validate(df_teste)
 
 
 def test_conc_enade_cont_fora_do_intervalo():
@@ -235,4 +235,4 @@ def test_conc_enade_cont_fora_do_intervalo():
     )
 
     with pytest.raises(pa.errors.SchemaError):
-        contrato_base.EnadeBase.validate(df_teste)
+        contrato_entrada.EnadeEntrada.validate(df_teste)

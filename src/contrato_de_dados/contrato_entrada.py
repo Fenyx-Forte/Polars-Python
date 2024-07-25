@@ -1,4 +1,5 @@
 from functools import partial
+
 import pandera.polars as pa
 import polars as pl
 
@@ -7,7 +8,7 @@ campo_float_entre_0_e_100 = partial(pa.Field, nullable=True, ge=0, le=100)
 campo_float_entre_0_e_5 = partial(pa.Field, nullable=True, ge=0, le=5)
 
 
-class EnadeBase(pa.DataFrameModel):
+class EnadeEntrada(pa.DataFrameModel):
     ano: pl.Int64 = pa.Field(isin=[2017, 2018, 2019, 2021], nullable=True)
     area_avaliacao: pl.String = campo_string_padrao()
     ies: pl.String = campo_string_padrao()
@@ -32,11 +33,11 @@ class EnadeBase(pa.DataFrameModel):
 
 
 def funcao_teste():
-    # print(EnadeBase.to_schema())
+    # print(EnadeEntrada.to_schema())
     # print("\n-----------\n")
-    # print(EnadeBase.to_schema().columns)
+    # print(EnadeEntrada.to_schema().columns)
 
-    schema = EnadeBase.to_schema()
+    schema = EnadeEntrada.to_schema()
 
     column_and_dtypes = {
         field.name: field.dtype.type for field in schema.columns.values()

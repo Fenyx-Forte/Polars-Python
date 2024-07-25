@@ -1,8 +1,9 @@
 from functools import partial
+
 import pandera.polars as pa
 import polars as pl
 
-from src.contrato_de_dados import contrato_base
+from src.contrato_de_dados import contrato_entrada
 
 campo_string_padrao = partial(pa.Field, nullable=False)
 campo_inteiro_positivo = partial(pa.Field, nullable=False, ge=1)
@@ -10,7 +11,7 @@ campo_float_entre_0_e_100 = partial(pa.Field, nullable=False, ge=0, le=100)
 campo_float_entre_0_e_5 = partial(pa.Field, nullable=False, ge=0, le=5)
 
 
-class EnadeFinal(contrato_base.EnadeBase):
+class EnadeSaida(contrato_entrada.EnadeEntrada):
     ano: pl.Int16 = pa.Field(isin=[2017, 2018, 2019, 2021], nullable=False)
     area_avaliacao: pl.String = campo_string_padrao()
     ies: pl.String = campo_string_padrao()

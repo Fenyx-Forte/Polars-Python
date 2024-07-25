@@ -7,6 +7,7 @@ from src.etl import (
     loading_data,
     reading_data,
     transforming_data,
+    valida_contrato,
 )
 from src.utils import my_log
 
@@ -43,9 +44,9 @@ def process_enade(raw_enade: pl.DataFrame) -> pl.DataFrame:
 
     lf_enade_base = transforming_data.apply_transformations(raw_enade, table)
 
-    transforming_data.verifica_enade_base_lf(lf_enade_base)
+    valida_contrato.valida_enade_entrada_lf(lf_enade_base)
 
-    transforming_data.verifica_enade_base_df(lf_enade_base.collect())
+    valida_contrato.valida_enade_entrada_df(lf_enade_base.collect())
 
     table = transforming_data.transform_columns(table)
 
@@ -59,9 +60,9 @@ def process_enade(raw_enade: pl.DataFrame) -> pl.DataFrame:
 
     df_enade_final = transforming_data.transform(raw_enade, table, filters)
 
-    transforming_data.verifica_enade_final_lf(df_enade_final.lazy())
+    valida_contrato.valida_enade_saida_lf(df_enade_final.lazy())
 
-    transforming_data.verifica_enade_final_df(df_enade_final)
+    valida_contrato.valida_enade_saida_df(df_enade_final)
 
     return df_enade_final
 
