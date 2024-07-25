@@ -23,7 +23,7 @@ class EnadeBase(pa.DataFrameModel):
     nota_bruta_ce: pl.Float64 = campo_float_entre_0_e_100()
     nota_padronizada_ce: pl.Float64 = campo_float_entre_0_e_5()
     conc_enade_cont: pl.Float64 = campo_float_entre_0_e_5()
-    conc_enade_faixa: pl.String = pa.Field(nullable=False)
+    conc_enade_faixa: pl.String = pa.Field(nullable=True)
 
     class Config:
         strict = True

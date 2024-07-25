@@ -179,17 +179,65 @@ def shrinking_numerical_columns(
     return table
 
 
+def filtro_num_inteiro_positivo(nome_coluna: str) -> pl.Expr:
+    return pl.col(nome_coluna) >= 1
+
+
+def filtro_num_entre_0_e_100(nome_coluna: str) -> pl.Expr:
+    return pl.col(nome_coluna).is_between(0, 100)
+
+
+def filtro_num_entre_0_e_5(nome_coluna: str) -> pl.Expr:
+    return pl.col(nome_coluna).is_between(0, 5)
+
+
+def filtro_enade_ano() -> pl.Expr:
+    return pl.col("ano").is_in([2017, 2018, 2019, 2021])
+
+
+def filtro_enade_num_conc_insc() -> pl.Expr:
+    return filtro_num_inteiro_positivo("num_conc_insc")
+
+
+def filtro_enade_num_conc_part() -> pl.Expr:
+    return filtro_num_inteiro_positivo("num_conc_part")
+
+
+def filtro_enade_nota_bruta_fg() -> pl.Expr:
+    return filtro_num_entre_0_e_100("nota_bruta_fg")
+
+
+def filtro_enade_nota_padronizada_fg() -> pl.Expr:
+    return filtro_num_entre_0_e_5("nota_padronizada_fg")
+
+
+def filtro_enade_nota_bruta_ce() -> pl.Expr:
+    return filtro_num_entre_0_e_100("nota_bruta_ce")
+
+
+def filtro_enade_nota_padronizada_ce() -> pl.Expr:
+    return filtro_num_entre_0_e_5("nota_padronizada_ce")
+
+
+def filtro_enade_conc_enade_cont() -> pl.Expr:
+    return filtro_num_entre_0_e_5("conc_enade_cont")
+
+
+def filtro_enade_conc_enade_faixa() -> pl.Expr:
+    return pl.col("conc_enade_faixa").is_between(1, 5)
+
+
 def enade_filters() -> list[pl.Expr]:
     filters = [
-        pl.col("ano").is_between(2017, 2021),
-        pl.col("num_conc_insc") >= 1,
-        pl.col("num_conc_part") >= 1,
-        pl.col("nota_bruta_fg").is_between(0, 100),
-        pl.col("nota_padronizada_fg").is_between(0, 5),
-        pl.col("nota_bruta_ce").is_between(0, 100),
-        pl.col("nota_padronizada_ce").is_between(0, 5),
-        pl.col("conc_enade_cont").is_between(0, 5),
-        pl.col("conc_enade_faixa").is_between(1, 5),
+        filtro_enade_ano(),
+        filtro_enade_num_conc_insc(),
+        filtro_enade_num_conc_part(),
+        filtro_enade_nota_bruta_fg(),
+        filtro_enade_nota_padronizada_fg(),
+        filtro_enade_nota_bruta_ce(),
+        filtro_enade_nota_padronizada_ce(),
+        filtro_enade_conc_enade_cont(),
+        filtro_enade_conc_enade_faixa(),
     ]
 
     return filters
