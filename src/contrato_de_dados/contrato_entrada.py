@@ -30,17 +30,3 @@ class EnadeEntrada(pa.DataFrameModel):
         strict = True
         # coerce = True
         # drop_invalid_rows = True
-
-
-def funcao_teste():
-    # print(EnadeEntrada.to_schema())
-    # print("\n-----------\n")
-    # print(EnadeEntrada.to_schema().columns)
-
-    schema = EnadeEntrada.to_schema()
-
-    column_and_dtypes = {
-        field.name: field.dtype.type for field in schema.columns.values()
-    }
-
-    print(column_and_dtypes)

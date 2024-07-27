@@ -38,27 +38,31 @@ def process_enade(raw_enade: pl.DataFrame) -> pl.DataFrame:
     Returns:
         O DataFrame com as transformações aplicadas aos dados.
     """
-    table = dataframe_utils.enade_table()
+    tabela_aux_enade = dataframe_utils.TabelaAuxiliarEnade()
 
-    table = transforming_data.change_column_names(table)
+    tabela_aux_enade = transforming_data.change_column_names(tabela_aux_enade)
 
-    lf_enade_base = transforming_data.apply_transformations(raw_enade, table)
+    lf_enade_base = transforming_data.apply_transformations(
+        raw_enade, tabela_aux_enade
+    )
 
     valida_contrato.valida_enade_entrada_lf(lf_enade_base)
 
     valida_contrato.valida_enade_entrada_df(lf_enade_base.collect())
 
-    table = transforming_data.transform_columns(table)
+    tabela_aux_enade = transforming_data.casting_columns(tabela_aux_enade)
 
-    table = transforming_data.casting_columns(table)
+    tabela_aux_enade = transforming_data.standardizing_data(tabela_aux_enade)
 
-    table = transforming_data.standardizing_data(table)
-
-    table = transforming_data.shrinking_numerical_columns(table)
+    tabela_aux_enade = transforming_data.shrinking_numerical_columns(
+        tabela_aux_enade
+    )
 
     filters = transforming_data.enade_filters()
 
-    df_enade_final = transforming_data.transform(raw_enade, table, filters)
+    df_enade_final = transforming_data.transform(
+        raw_enade, tabela_aux_enade, filters
+    )
 
     valida_contrato.valida_enade_saida_lf(df_enade_final.lazy())
 

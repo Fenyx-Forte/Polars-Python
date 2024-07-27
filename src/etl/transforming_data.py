@@ -1,9 +1,7 @@
 from logging import getLogger
 
-import pandera.polars as pa
 import polars as pl
 
-from src.contrato_de_dados import contrato_entrada, contrato_saida
 from src.etl import dataframe_utils, filtros
 from src.utils import my_log
 
@@ -11,101 +9,66 @@ logger = getLogger("transforming_data")
 pl.Config.load_from_file("./config/polars.json")
 
 
-def change_column_names(table: dataframe_utils.Table) -> dataframe_utils.Table:
+def change_column_names(
+    tabela_aux: dataframe_utils.TabelaAuxiliarTransformacao,
+) -> dataframe_utils.TabelaAuxiliarTransformacao:
     """
     Altera o nome das colunas de um DataFrame.
 
     Args:
-        table: A tabela a ser alterada.
+        tabela_aux: A tabela a ser alterada.
 
     Returns:
         A tabela com o nome das colunas alteradas.
     """
-    columns = table.columns
-
-    for column in columns.values():
-        table.set_expr(
-            column.final_name,
-            table.get_expr(column.final_name).alias(column.final_name),
+    for nome_modificado in tabela_aux.renomear_colunas.values():
+        tabela_aux.set_expr(
+            nome_modificado,
+            tabela_aux.get_expr(nome_modificado).alias(nome_modificado),
         )
 
-    return table
+    return tabela_aux
 
 
-def transform_column_conceito_enade_faixa(
-    table: dataframe_utils.Table,
-) -> dataframe_utils.Table:
+def casting_columns(
+    tabela_aux: dataframe_utils.TabelaAuxiliarTransformacao,
+) -> dataframe_utils.TabelaAuxiliarTransformacao:
     """
-    Transforma a coluna "conc_enade_faixa" de um DataFrame em um tipo de dados Int8.
+    Realiza o casting de colunas especificas.
 
     Args:
-        table: A tabela a ser alterada.
-
-    Returns:
-        A tabela com a coluna "conc_enade_faixa" transformada.
-    """
-    table.set_expr(
-        "conc_enade_faixa",
-        table.get_expr("conc_enade_faixa").cast(pl.Int8, strict=False),
-    )
-
-    return table
-
-
-def transform_columns(table: dataframe_utils.Table) -> dataframe_utils.Table:
-    """
-    Aplica transformações específicas em colunas específicas.
-
-    Args:
-        table: A tabela a ser transformada.
-
-    Returns:
-        A tabela com as transformações aplicadas.
-    """
-    mod1_table = transform_column_conceito_enade_faixa(table)
-
-    return mod1_table
-
-
-def casting_columns(table: dataframe_utils.Table) -> dataframe_utils.Table:
-    """
-    Realiza o casting de todas as colunas da tabela para o tipo de dados final definido.
-
-    Args:
-        table: A tabela a ser alterada.
+        tabela_aux: A tabela a ser alterada.
 
     Returns:
         A tabela com as colunas transformadas.
     """
-    columns = table.columns
-
-    for column in columns.values():
-        table.set_expr(
-            column.final_name, column.expression.cast(column.final_dtype)
+    for nome_coluna, novo_dtype in tabela_aux.casting_colunas.items():
+        tabela_aux.set_expr(
+            nome_coluna,
+            tabela_aux.get_expr(nome_coluna).cast(novo_dtype, strict=False),
         )
 
-    return table
+    return tabela_aux
 
 
 def standardizing_strings(
-    table: dataframe_utils.Table,
-) -> dataframe_utils.Table:
+    tabela_aux: dataframe_utils.TabelaAuxiliarTransformacao,
+) -> dataframe_utils.TabelaAuxiliarTransformacao:
     """
     Aplica transformações para padronizar strings nas colunas de uma tabela.
 
     Args:
-        table: A tabela a ser transformada.
+        tabela_aux: A tabela a ser transformada.
 
     Returns:
         A tabela com as strings padronizadas.
     """
-    columns = table.columns
-
-    for column in columns.values():
-        if column.final_dtype.is_(pl.String):
-            table.set_expr(
-                column.final_name,
-                column.expression.str.to_lowercase()
+    for coluna, data_type in tabela_aux.dtypes_finais_colunas.items():
+        if data_type.is_(pl.String):
+            tabela_aux.set_expr(
+                coluna,
+                tabela_aux.get_expr(coluna)
+                .str.to_lowercase()
                 .str.strip_chars()
                 .str.replace_all("á", "a")
                 .str.replace_all("â", "a")
@@ -121,42 +84,42 @@ def standardizing_strings(
                 .str.replace_all("  ", " "),
             )
 
-    return table
+    return tabela_aux
 
 
-def standardizing_data(table: dataframe_utils.Table) -> dataframe_utils.Table:
+def standardizing_data(
+    tabela_aux: dataframe_utils.TabelaAuxiliarTransformacao,
+) -> dataframe_utils.TabelaAuxiliarTransformacao:
     """
     Aplica transformações para padronizar os dados de uma tabela.
 
     Args:
-        table: A tabela a ser transformada.
+        tabela_aux: A tabela a ser transformada.
 
     Returns:
         A tabela com os dados padronizados.
     """
-    mod_strings_table = standardizing_strings(table)
+    mod_strings_table = standardizing_strings(tabela_aux)
 
     return mod_strings_table
 
 
 def shrinking_numerical_columns(
-    table: dataframe_utils.Table,
-) -> dataframe_utils.Table:
+    tabela_aux: dataframe_utils.TabelaAuxiliarTransformacao,
+) -> dataframe_utils.TabelaAuxiliarTransformacao:
     """
     Reduz o tamanho dos dados de todas as colunas numéricas de uma tabela.
 
     Args:
-        table: A tabela a ser transformada.
+        tabela_aux: A tabela a ser transformada.
 
     Returns:
         A tabela com os tipos de dados das colunas numéricas otimizados em relação à armazenamento.
     """
-    columns = table.columns
+    for coluna in tabela_aux.transformacoes_colunas.keys():
+        tabela_aux.set_expr(coluna, tabela_aux.get_expr(coluna).shrink_dtype())
 
-    for column in columns.values():
-        table.set_expr(column.final_name, column.expression.shrink_dtype())
-
-    return table
+    return tabela_aux
 
 
 def enade_filters() -> list[pl.Expr]:
@@ -178,26 +141,24 @@ def enade_filters() -> list[pl.Expr]:
 
 def apply_transformations(
     df: pl.DataFrame,
-    table: dataframe_utils.Table,
+    tabela_aux: dataframe_utils.TabelaAuxiliarTransformacao,
 ) -> pl.LazyFrame:
-    transformations = []
+    transformations = list(tabela_aux.transformacoes_colunas.values())
 
-    columns = table.columns
-    for column in columns.values():
-        transformations.append(column.expression)
-
-    return df.lazy().select(transformations)
+    return df.lazy().select(*transformations)
 
 
 def transform(
-    df: pl.DataFrame, table: dataframe_utils.Table, filters: list[pl.Expr]
+    df: pl.DataFrame,
+    tabela_aux: dataframe_utils.TabelaAuxiliarTransformacao,
+    filters: list[pl.Expr],
 ) -> pl.DataFrame:
     """
     Aplica transformações a uma DataFrame com base em uma tabela especificada.
 
     Args:
         df: O DataFrame a ser transformado.
-        table: A tabela que define as transformações a serem aplicadas.
+        tabela_aux: A tabela que define as transformações a serem aplicadas.
 
     Returns:
         O DataFrame transformado.
@@ -209,7 +170,7 @@ def transform(
     logger.info("Starting transformation...")
     try:
         final_df = (
-            apply_transformations(df, table)
+            apply_transformations(df, tabela_aux)
             .filter(*filters)
             .drop_nulls()
             .unique()

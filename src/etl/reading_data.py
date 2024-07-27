@@ -9,26 +9,6 @@ logger = getLogger("reading_data")
 pl.Config.load_from_file("./config/polars.json")
 
 
-def read_excel(path: str) -> pl.DataFrame:
-    """
-    Leia um arquivo Excel do caminho especificado.
-
-    Args:
-        path: O caminho para o arquivo Excel.
-
-    Returns:
-        O DataFrame contendo os dados do arquivo Excel.
-    """
-
-    logger.info(f"Reading {path}...")
-
-    df = pl.read_excel(path, engine="calamine")
-
-    logger.info(f"Done reading {path}")
-
-    return df
-
-
 def read_enade_excel(path: str) -> pl.DataFrame:
     """
     Leia um arquivo Excel do caminho especificado, selecionando apenas as colunas
@@ -44,11 +24,12 @@ def read_enade_excel(path: str) -> pl.DataFrame:
     logger.info(f"Reading {path}...")
 
     # Defina as colunas a serem selecionadas do arquivo Excel
-    table = dataframe_utils.enade_table()
-    columns = [column.initial_name for column in table.columns.values()]
+    tabela_auxiliar = dataframe_utils.TabelaAuxiliarEnade()
+
+    colunas = tabela_auxiliar.lista_nomes_colunas_originais()
 
     # Leia o arquivo Excel, selecionando apenas as colunas especificadas
-    df = pl.read_excel(path, engine="calamine", columns=columns)
+    df = pl.read_excel(path, engine="calamine", columns=colunas)
 
     logger.info(f"Done reading {path}")
 

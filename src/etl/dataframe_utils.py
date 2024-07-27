@@ -1,179 +1,71 @@
 from logging import getLogger
 
+import pandera.polars as pa
 import polars as pl
 
+from src.contrato_de_dados import contrato_saida
 from src.utils import my_log
 
 logger = getLogger("dataframe_utils")
 pl.Config.load_from_file("./config/polars.json")
 
 
-class DataTypeDifferents(Exception):
-    """
-    Exceção levantada quando os tipos de dados de uma ou mais colunas são diferentes do esperado.
-    """
-
-    ...
-
-
-class Column:
-    """
-    Representa uma coluna de um DataFrame.
-
-    Args:
-        initial_name (str): O nome inicial da coluna.
-        final_name (str): O nome final da coluna.
-        initial_dtype (pl.DataType): O tipo de dados inicial da coluna.
-        final_dtype (pl.DataType): O tipo de dados final da coluna.
-
-    Attributes:
-        initial_name (str): O nome inicial da coluna.
-        final_name (str): O nome final da coluna.
-        initial_dtype (pl.DataType): O tipo de dados inicial da coluna.
-        final_dtype (pl.DataType): O tipo de dados final da coluna.
-        expression (pl.Expr): A expressão da coluna.
-    """
-
-    initial_name: str
-    final_name: str
-    initial_dtype: pl.DataType
-    final_dtype: pl.DataType
-    expression: pl.Expr
+class TabelaAuxiliarTransformacao:
+    renomear_colunas: dict[str, str]
+    casting_colunas: dict[str, pl.DataType]
+    transformacoes_colunas: dict[str, pl.Expr]
+    dtypes_finais_colunas: dict[str, pl.DataType]
 
     def __init__(
         self,
-        initial_name: str,
-        final_name: str,
-        initial_dtype: pl.DataType,
-        final_dtype: pl.DataType,
-    ):
-        self.initial_name = initial_name
-        self.final_name = final_name
-        self.initial_dtype = initial_dtype
-        self.final_dtype = final_dtype
-        self.expression = pl.col(initial_name)
+        contrato_de_dados_saida: pa.DataFrameModel,
+    ) -> None:
+        schema_saida = contrato_de_dados_saida.to_schema()
 
+        self.dtypes_finais_colunas = {}
 
-class Table:
-    """
-    Representa uma tabela.
-
-    Args:
-        columns (dict[str, Column]): Dicionário que mapeia nomes de colunas para objetos
-            da classe Column.
-
-    Attributes:
-        columns (dict[str, Column]): Dicionário que mapeia nomes de colunas para objetos
-            da classe Column.
-    """
-
-    columns: dict[str, Column]
-
-    def __init__(self, columns: dict[str, Column]) -> None:
-        """
-        Inicializa um objeto da classe Table.
-
-        Args:
-            columns: Dicionário que mapeia nomes de colunas para
-                objetos da classe Column.
-
-        Returns:
-            None.
-        """
-        self.columns = columns
+        for field in schema_saida.columns.values():
+            self.dtypes_finais_colunas[field.name] = field.dtype.type
 
     def set_expr(self, column_name: str, expression: pl.Expr) -> None:
-        """
-        Define a expressão de uma coluna.
-
-        Args:
-            column_name: Nome da coluna.
-            expression: Expressão da coluna.
-
-        Returns:
-            None.
-        """
-        self.columns[column_name].expression = expression
+        self.transformacoes_colunas[column_name] = expression
 
     def get_expr(self, column_name: str) -> pl.Expr:
-        """
-        Obtém a expressão de uma coluna.
+        return self.transformacoes_colunas[column_name]
 
-        Args:
-            column_name (str): Nome da coluna.
+    def lista_nomes_colunas_originais(self) -> list[str]:
+        return list(self.renomear_colunas.keys())
 
-        Returns:
-            Expressão da coluna.
-        """
-        return self.columns[column_name].expression
+    def lista_nomes_colunas_modificados(self) -> list[str]:
+        return list(self.renomear_colunas.values())
 
 
-def enade_table() -> Table:
-    """
-    Cria um objeto Table com as colunas necessárias para a tabela ENADE.
+class TabelaAuxiliarEnade(TabelaAuxiliarTransformacao):
+    def __init__(self) -> None:
+        super().__init__(contrato_saida.EnadeSaida)
 
-    Returns:
-        Um objeto Table com as colunas para a tabela ENADE.
-    """
+        self.renomear_colunas = {
+            "Ano": "ano",
+            "Área de Avaliação": "area_avaliacao",
+            "Nome da IES": "ies",
+            "Organização Acadêmica": "org_acad",
+            "Categoria Administrativa": "cat_acad",
+            "Modalidade de Ensino": "mod_ens",
+            "Município do Curso": "municipio_curso",
+            "Sigla da UF": "sigla_uf",
+            "Nº de Concluintes Inscritos": "num_conc_insc",
+            "Nº  de Concluintes Participantes": "num_conc_part",
+            "Nota Bruta - FG": "nota_bruta_fg",
+            "Nota Padronizada - FG": "nota_padronizada_fg",
+            "Nota Bruta - CE": "nota_bruta_ce",
+            "Nota Padronizada - CE": "nota_padronizada_ce",
+            "Conceito Enade (Contínuo)": "conc_enade_cont",
+            "Conceito Enade (Faixa)": "conc_enade_faixa",
+        }
 
-    columns = {
-        "ano": Column("Ano", "ano", pl.Int64(), pl.Int16()),
-        "area_avaliacao": Column(
-            "Área de Avaliação", "area_avaliacao", pl.String(), pl.String()
-        ),
-        "ies": Column("Nome da IES", "ies", pl.String(), pl.String()),
-        "org_acad": Column(
-            "Organização Acadêmica", "org_acad", pl.String(), pl.String()
-        ),
-        "cat_acad": Column(
-            "Categoria Administrativa", "cat_acad", pl.String(), pl.String()
-        ),
-        "mod_ens": Column(
-            "Modalidade de Ensino", "mod_ens", pl.String(), pl.String()
-        ),
-        "municipio_curso": Column(
-            "Município do Curso", "municipio_curso", pl.String(), pl.String()
-        ),
-        "sigla_uf": Column("Sigla da UF", "sigla_uf", pl.String(), pl.String()),
-        "num_conc_insc": Column(
-            "Nº de Concluintes Inscritos",
-            "num_conc_insc",
-            pl.Int64(),
-            pl.Int16(),
-        ),
-        "num_conc_part": Column(
-            "Nº  de Concluintes Participantes",
-            "num_conc_part",
-            pl.Int64(),
-            pl.Int16(),
-        ),
-        "nota_bruta_fg": Column(
-            "Nota Bruta - FG", "nota_bruta_fg", pl.Float64(), pl.Float32()
-        ),
-        "nota_padronizada_fg": Column(
-            "Nota Padronizada - FG",
-            "nota_padronizada_fg",
-            pl.Float64(),
-            pl.Float32(),
-        ),
-        "nota_bruta_ce": Column(
-            "Nota Bruta - CE", "nota_bruta_ce", pl.Float64(), pl.Float32()
-        ),
-        "nota_padronizada_ce": Column(
-            "Nota Padronizada - CE",
-            "nota_padronizada_ce",
-            pl.Float64(),
-            pl.Float32(),
-        ),
-        "conc_enade_cont": Column(
-            "Conceito Enade (Contínuo)",
-            "conc_enade_cont",
-            pl.Float64(),
-            pl.Float32(),
-        ),
-        "conc_enade_faixa": Column(
-            "Conceito Enade (Faixa)", "conc_enade_faixa", pl.String(), pl.Int8()
-        ),
-    }
+        self.casting_colunas = {"conc_enade_faixa": pl.Int8}
 
-    return Table(columns)
+        self.transformacoes_colunas = {}
+
+        for nome_original, nome_modificado in self.renomear_colunas.items():
+            self.transformacoes_colunas[nome_modificado] = pl.col(nome_original)
