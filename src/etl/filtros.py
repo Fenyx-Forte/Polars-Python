@@ -47,3 +47,7 @@ def filtro_enade_conc_enade_cont() -> pl.Expr:
 
 def filtro_enade_conc_enade_faixa() -> pl.Expr:
     return pl.col("conc_enade_faixa").is_between(1, 5)
+
+
+def filtro_enade_num_conc_insc_maior_ou_igual_num_conc_part() -> pl.Expr:
+    return pl.col("num_conc_insc").ge(pl.col("num_conc_part"))

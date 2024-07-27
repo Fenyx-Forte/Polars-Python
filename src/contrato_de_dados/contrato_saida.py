@@ -28,3 +28,11 @@ class EnadeSaida(contrato_entrada.EnadeEntrada):
     nota_padronizada_ce: pl.Float32 = campo_float_entre_0_e_5()
     conc_enade_cont: pl.Float32 = campo_float_entre_0_e_5()
     conc_enade_faixa: pl.Int8 = pa.Field(ge=1, le=5, nullable=False)
+
+    @pa.dataframe_check
+    def num_conc_insc_maior_ou_igual_num_conc_part(
+        cls, data: pa.PolarsData
+    ) -> pl.LazyFrame:
+        return data.lazyframe.select(
+            pl.col("num_conc_insc").ge(pl.col("num_conc_part"))
+        )

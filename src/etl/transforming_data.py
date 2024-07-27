@@ -170,6 +170,7 @@ def enade_filters() -> list[pl.Expr]:
         filtros.filtro_enade_nota_padronizada_ce(),
         filtros.filtro_enade_conc_enade_cont(),
         filtros.filtro_enade_conc_enade_faixa(),
+        filtros.filtro_enade_num_conc_insc_maior_ou_igual_num_conc_part(),
     ]
 
     return filters
