@@ -19,21 +19,21 @@ repos:
         args:
         - --line-length=80
         - --ignore=D203,E111,E203,F401
-        - src/
+        - app/
         - tests/
       # Formatter
       - id: ruff-format
         types_or: [ python, pyi, jupyter ]
         args:
         - --line-length=80
-        - src/
+        - app/
         - tests/
 
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.8
     hooks:
       - id: bandit
-        args: ["-c", "pyproject.toml", "-r", "src/", "tests/"]
+        args: ["-c", "pyproject.toml", "-r", "app/", "tests/"]
         additional_dependencies: ["bandit[toml]"]
 
   - repo: https://github.com/commitizen-tools/commitizen

@@ -2,14 +2,14 @@ from logging import getLogger
 
 import polars as pl
 
-from src.etl import (
+from app.etl import (
     dataframe_utils,
     loading_data,
     reading_data,
     transforming_data,
     valida_contrato,
 )
-from src.utils import my_log
+from app.utils import my_log
 
 logger = getLogger("etl_routine")
 pl.Config.load_from_file("./config/polars.json")

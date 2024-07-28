@@ -1,4 +1,4 @@
 # DataFrame Utils
 Documentação para o módulo dataframe_utils.py
 
-::: src.etl.dataframe_utils
+::: app.etl.dataframe_utils

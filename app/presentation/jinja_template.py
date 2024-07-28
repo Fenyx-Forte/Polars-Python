@@ -3,7 +3,7 @@ from pathlib import Path
 
 from jinja2 import Template
 
-from src.utils import my_log
+from app.utils import my_log
 
 logger = logging.getLogger("jinja_template")
 

@@ -1,5 +1,5 @@
-from src import app
-from src.utils import my_time
+from app import app
+from app.utils import my_time
 
 if __name__ == "__main__":
     report_time = my_time.now_brasilia_str_report()

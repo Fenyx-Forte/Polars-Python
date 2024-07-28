@@ -39,7 +39,7 @@ pytest = "^8.2.1"
 [tool.ruff]
 line-length = 80
 target-version = "py310"
-include = ["pyproject.toml", "src/**/*.py", "tests/**/*.py", "src/*.py", "tests/*.py"]
+include = ["pyproject.toml", "app/**/*.py", "tests/**/*.py", "app/*.py", "tests/*.py"]
 
 [tool.ruff.lint]
 ignore = ["D203", "E111", "E203", "F401"]
@@ -47,7 +47,7 @@ ignore = ["D203", "E111", "E203", "F401"]
 [tool.black]
 line-length = 80
 target-version = ['py310']
-src = ["src/", "tests/"]
+app = ["app/", "tests/"]
 
 [tool.bandit]
 skips = ["B101"]

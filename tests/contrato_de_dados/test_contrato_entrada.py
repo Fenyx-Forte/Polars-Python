@@ -2,7 +2,7 @@ import pandera.polars as pa
 import polars as pl
 import pytest
 
-from src.contrato_de_dados import contrato_entrada
+from app.contrato_de_dados import contrato_entrada
 
 
 def test_contrato_correto():

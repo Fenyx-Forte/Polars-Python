@@ -2,8 +2,8 @@ from logging import getLogger
 
 import polars as pl
 
-from src.etl import dataframe_utils, filtros
-from src.utils import my_log
+from app.etl import dataframe_utils, filtros
+from app.utils import my_log
 
 logger = getLogger("transforming_data")
 pl.Config.load_from_file("./config/polars.json")

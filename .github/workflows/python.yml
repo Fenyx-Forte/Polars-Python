@@ -32,7 +32,7 @@ jobs:
 
         - name: Audit
           run: |
-            poetry run bandit -c pyproject.toml -r src/ tests/
+            poetry run bandit -c pyproject.toml -r app/ tests/
 
         ## - name: Test with pytest
           ## run: |

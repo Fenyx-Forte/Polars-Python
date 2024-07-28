@@ -41,7 +41,7 @@ nav:
 
     - SQL: pastas/sql.md
 
-    - SRC: pastas/src.md
+    - app: pastas/app.md
 
     - Testes: pastas/testes.md
 
