@@ -2,8 +2,7 @@ import logging
 from pathlib import Path
 
 from jinja2 import Template
-
-from app.utils import my_log
+from uteis import my_log
 
 logger = logging.getLogger("jinja_template")
 

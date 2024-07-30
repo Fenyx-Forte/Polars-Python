@@ -1,8 +1,7 @@
 from logging import getLogger
 
 import polars as pl
-
-from app.utils import my_log
+from uteis import my_log
 
 logger = getLogger("loading_data")
 pl.Config.load_from_file("./config/polars.json")

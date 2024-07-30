@@ -2,8 +2,7 @@ from functools import partial
 
 import pandera.polars as pa
 import polars as pl
-
-from app.contrato_de_dados import contrato_entrada
+from contrato_de_dados import contrato_entrada
 
 campo_string_padrao = partial(pa.Field, nullable=False)
 campo_inteiro_positivo = partial(pa.Field, nullable=False, ge=1)

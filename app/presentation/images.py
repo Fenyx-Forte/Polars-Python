@@ -1,7 +1,7 @@
 import base64
 import logging
 
-from app.utils import my_log
+from uteis import my_log
 
 logger = logging.getLogger("images")
 

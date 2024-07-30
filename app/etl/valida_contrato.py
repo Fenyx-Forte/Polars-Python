@@ -2,9 +2,8 @@ from logging import getLogger
 
 import pandera.polars as pa
 import polars as pl
-
-from app.contrato_de_dados import contrato_entrada, contrato_saida
-from app.utils import my_log
+from contrato_de_dados import contrato_entrada, contrato_saida
+from uteis import my_log
 
 logger = getLogger("transforming_data")
 pl.Config.load_from_file("./config/polars.json")

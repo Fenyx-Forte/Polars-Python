@@ -1,9 +1,8 @@
 from logging import getLogger
 
 import polars as pl
-
-from app.etl import dataframe_utils
-from app.utils import my_log
+from etl import dataframe_utils
+from uteis import my_log
 
 logger = getLogger("reading_data")
 pl.Config.load_from_file("./config/polars.json")

@@ -1,8 +1,8 @@
 from logging import getLogger
 
-from app.etl import etl_routine
-from app.presentation import pdf
-from app.utils import my_log
+from etl import etl_routine
+from presentation import pdf
+from uteis import my_log
 
 logger = getLogger("app")
 

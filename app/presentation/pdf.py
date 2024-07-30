@@ -1,9 +1,8 @@
 import logging
 
+from presentation import images, jinja_template, polars_to_html
+from uteis import duckdb_sql, my_log
 from weasyprint import HTML
-
-from app.presentation import images, jinja_template, polars_to_html
-from app.utils import duckdb_sql, my_log
 
 logger = logging.getLogger("pdf")
 logging.getLogger("fontTools").setLevel(logging.WARNING)
