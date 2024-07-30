@@ -25,6 +25,7 @@ psycopg2 = "^2.9.9"
 psycopg2-binary = "^2.9.9"
 pyarrow = "^17.0.0"
 pandera = {extras = ["polars"], version = "^0.20.3"}
+streamlit = "^1.37.0"
 
 
 [tool.poetry.group.dev.dependencies]
